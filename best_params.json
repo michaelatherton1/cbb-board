@@ -1,0 +1,14 @@
+{
+ "half_life": 1000000000.0,
+ "lam_eff": 4,
+ "lam_tempo": 2,
+ "r_eff": 1.0,
+ "r_tempo": 1.0,
+ "new_team_eff": -16,
+ "blowout_cap": 999,
+ "hca_prior": 1.4,
+ "lam_hca": 500,
+ "lam_mu": 50.0,
+ "w_conf": 0.3,
+ "hca_nc_prior": 0.0
+}

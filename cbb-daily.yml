@@ -1,0 +1,50 @@
+name: CBB dashboard
+
+# Nov-Apr. Times are UTC (ET + 5). 14:17 UTC ~ 9am ET: the first run of the day re-downloads teams,
+# box scores and schedule, re-rates every team, projects today + tomorrow and updates the model record.
+# Every run (hourly, 9am-11pm ET) re-pulls Kalshi / Polymarket US / Novig / ProphetX prices (Robinhood is derived from Kalshi) and rebuilds the page.
+on:
+  schedule:
+    - cron: "17 14-23 * 11,12,1,2,3,4 *"
+    - cron: "17 0-4 * 11,12,1,2,3,4 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cbb-dashboard
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      NOVIG_KEY_ID: ${{ secrets.NOVIG_KEY_ID }}
+      NOVIG_PRIVATE_KEY: ${{ secrets.NOVIG_PRIVATE_KEY }}
+      PROPHETX_ACCESS_KEY: ${{ secrets.PROPHETX_ACCESS_KEY }}
+      PROPHETX_SECRET_KEY: ${{ secrets.PROPHETX_SECRET_KEY }}
+      PROPHETX_AFFILIATE_KEY: ${{ secrets.PROPHETX_AFFILIATE_KEY }}
+      TZ: America/Chicago
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Restore downloaded seasons
+        uses: actions/cache@v4
+        with:
+          path: data/*.parquet
+          key: cbb-data-${{ github.run_id }}
+          restore-keys: cbb-data-
+      - run: pip install -r requirements.txt
+      - name: Model (once a day) + prices + dashboard
+        run: python cbb/run.py --days 2
+      - name: Commit outputs
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add docs/cbb data/out
+          git commit -m "CBB dashboard $(date -u +%FT%H:%MZ)" || echo "nothing to commit"
+          git pull --rebase && git push
