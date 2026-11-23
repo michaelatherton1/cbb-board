@@ -10,5 +10,6 @@
  "lam_hca": 500,
  "lam_mu": 50.0,
  "w_conf": 0.3,
- "hca_nc_prior": 0.0
+ "hca_nc_prior": 0.0,
+ "lam_style": 12
 }
