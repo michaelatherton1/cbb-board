@@ -9,6 +9,10 @@ Input: `python experiments/flag_games.py --data-dir <main branch data/out> --out
 not-yet-started games where |model home spread − median DK/FD/BetMGM home spread| ≥ 3 (max 10).
 
 For each game, in tip-off order (≤ ~5 searches per game):
+0. FIRST: each team's top 2-3 players by minutes - is any NEWLY out / doubtful / questionable today? EXP-004 found that
+   when a team's top player is newly out, the team does ~2.5 pts worse than the model but the closing line moves only
+   ~0.5 pts. Start key_findings with "NEW ABSENCE: <player> (<team>, ~<mpg> mpg) - <status>, <source>" and note
+   whether the line seems to reflect it.
 1. Check the line's direction against a public odds page, especially at neutral sites: is the favorite reversed in our data?
 2. Player availability (out / questionable / returning), with the source and its date. Note any conference or NCAA availability report.
 3. Context: event and venue, travel, games in the last 2 days, coaching changes, roster turnover.
