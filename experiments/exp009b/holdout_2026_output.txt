@@ -1,0 +1,7 @@
+2026 games n=4620 dates 2025-11-28..2026-04-06  bias-adj range -0.42..0.16
+1) slope 0.311  95% CI by date [0.283, 0.342]  -> PASS
+2) |m_adj|>=3: n=1433, moved=1212, toward model 0.752 -> PASS
+   reported: mean move toward model +1.41 pts; (actual - close) toward model +1.10
+   over: moved n=662, toward 0.775
+   under: moved n=550, toward 0.725
+CONFIRMED

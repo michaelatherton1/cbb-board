@@ -113,7 +113,7 @@ only the totals terms change (bt [0.826, 24.26] -> [0.884, 16.00]; total_sd 17.0
 **Merged to main 2026-11-23** (owner approved). `experiments/results/baseline.json` re-run on the merged model
 (old one kept as `baseline_pre_exp006.json`); future experiments compare against total MAE 13.226.
 
-## EXP-009b — Does the model predict where the TOTAL moves from open to close? (2026-11-23) — PRE-REGISTERED
+## EXP-009b — Does the model predict where the TOTAL moves from open to close? (2026-11-23) — CONFIRMED
 
 **Why.** EXP-006 showed the model adds nothing beyond the CLOSING total. But Kalshi totals trade long before tip,
 when prices sit nearer the open. If the model predicts the open -> close move, early Kalshi prices could be beaten
@@ -136,4 +136,23 @@ CONFIRMED only if both hold:
 2. For |model_adj - open| >= 3, the share of moved lines (close != open) that moved toward the model is >= 0.55.
 Reported, not part of the decision: the mean move toward the model in that group, and (actual - close) in the same direction.
 Not a betting rule: whether ~0.5 pt of closing value survives Kalshi fees and spreads is EXP-009c.
+
+### Result (2026 season, run once; output in experiments/exp009b/holdout_2026_output.txt)
+- n = 4,620 games (Nov 28 2025 - Apr 6 2026).
+- 1) Slope 0.311, 95% CI by date 0.283-0.342: PASS.
+- 2) |model_adj - open| >= 3 (n = 1,433; 1,212 moved): lines moved toward the model 75.2% (over 77.5%, under 72.5%): PASS.
+- Reported: mean move toward the model +1.41 pts; (actual - close) in the model's direction +1.10 pts.
+- **CONFIRMED.**
+
+### Diagnostics after the run (not re-tests)
+- The effect is about 3x the 2027 exploration, so 2026's opening-line data was checked:
+  - Same provider (DraftKings), line-move sd 2.66 (2027: 3.19); 17% of lines unchanged.
+  - The open is 0.20 pts less accurate than the close (2027: 0.21).
+  - The slope holds every month: Nov 0.20, Dec 0.32, Jan 0.32, Feb 0.27, Mar 0.38. Early season is weaker, as in early 2027 (0.14).
+- Versus the OPEN the model carries real information (slope of (actual - open) on (model - open): 2026 0.46, 2027 0.13).
+  Versus the CLOSE it carries little (0.07 / 0.11). The market prices in what the model knows between open and close.
+- Planning number: about +0.5 pt of closing value early in the season and +1.4 later. That is worth roughly 1.2-3.3c
+  at a Kalshi total rung near the line, versus a 1.75c taker fee at 50c.
+- Open questions for EXP-009c: when DraftKings moves (minutes after opening or through the day), and whether Kalshi prices
+  sit near the open long enough to trade.
 
