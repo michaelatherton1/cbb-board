@@ -53,3 +53,22 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-007 — Monthly re-check of the opening-line blend (started 2026-11-23) — RUNNING monthly
+
+**Why.** EXP-002 found that the model adds nothing to DraftKings' opening line early in 2027 (best weight 0). There
+was a hint (days 8-22) that the model's weight may grow as the season goes on. The opening-line holdout season (2026)
+is unspent, so re-open EXP-002 only when the live season shows a real signal.
+
+**Script.** `experiments/blend_check.py`: Record-tab pre-game lines + raw ESPN opening lines, best weight by
+days-into-season bucket, with a by-date bootstrap range.
+**Pre-registered rule.** Re-open EXP-002 if a bucket with >= 300 games has best w >= 0.15 and its 80% range excludes 0.
+Results are appended to `experiments/blend_check.md`.
+
+**First run (Nov 23, through day 21).**
+- Days 0-14 (637 games): w = 0.00.
+- Days 15-30 (307 games so far): w = 0.10 (80% range 0.05-0.20). Not over the bar yet, but moving.
+- Totals: w = 0.15 lowers MAE 13.251 → 13.240 (noise).
+- Verdict: don't re-open yet.
+
+**Schedule.** A scheduled task runs it on the 1st of each month, Dec-Apr, and messages Michael.
