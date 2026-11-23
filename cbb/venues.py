@@ -15,10 +15,16 @@ Endpoints (public unless noted):
   Novig         GET api.novig.com/v3/catalog/markets?league=NCAAB   (signed: needs NOVIG_KEY_ID + NOVIG_PRIVATE_KEY)
   ProphetX      GET cash.api.prophetx.co/partner/v4/{mm|affiliate}/get_multiple_markets  (needs keys, see below)
   Robinhood     no API: derived from Kalshi's book (Robinhood routes to it) with Robinhood's per-contract fees
+  Sportsbooks   GET therundown.io/api/v2/sports/5/events/{date}  (needs THERUNDOWN_API_KEY). Free plan = DraftKings,
+                FanDuel, BetMGM sportsbooks, 5-min delay, 20k data points/day and 200k/month: pulled a few times a
+                day within that budget and cached in data/out. Reference only (not bettable in Texas): never used
+                for Best, arbitrage or edges.
 """
-import base64, hashlib, os, re, time
+import base64, hashlib, json, os, re, time
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone
+from datetime import date as _date, datetime, timedelta, timezone
+from pathlib import Path
+from zoneinfo import ZoneInfo
 from urllib.parse import quote, unquote
 import pandas as pd
 import requests
@@ -525,13 +531,212 @@ def robinhood_from_kalshi(kalshi):
     return rh[COLS]
 
 
+# ------------------------------------------------------------------------------- Sportsbooks (TheRundown)
+THERUNDOWN = os.environ.get("THERUNDOWN_BASE_URL", "https://therundown.io/api/v2")
+THERUNDOWN_SPORT = 5                      # NCAA men's basketball
+SPORTSBOOKS = {19: "DraftKings Sportsbook", 23: "FanDuel Sportsbook", 22: "BetMGM"}   # affiliate ids (free plan)
+REFERENCE_VENUES = list(SPORTSBOOKS.values())
+TR_MARKETS = {1: "ml", 2: "spread", 3: "total"}
+TR_EVERY_HOURS = float(os.environ.get("THERUNDOWN_EVERY_HOURS", "3"))   # today's slate: at most this often
+TR_TOMORROW_FROM_HOUR = 17                # tomorrow's slate: once a day, from 5pm ET (lines are up by then)
+TR_DIR = Path(os.environ.get("CBB_OUT", Path(__file__).resolve().parent.parent / "data" / "out"))
+ET = ZoneInfo("America/New_York")
+
+
+def parse_therundown(payload, books=SPORTSBOOKS):
+    """v2 events -> quote rows. Sportsbook prices are American odds with the vig in them: ask = implied probability."""
+    rows = []
+    for ev in (payload or {}).get("events") or []:
+        st = (ev.get("score") or {}).get("event_status")
+        if st and st != "STATUS_SCHEDULED":
+            continue
+        teams = ev.get("teams") or []
+        away = next((t for t in teams if t.get("is_away")), None)
+        home = next((t for t in teams if t.get("is_home")), None)
+        if not away or not home:
+            continue
+        an, hn = away.get("name"), home.get("name")
+        start = ev.get("event_date")
+        d = pd.Timestamp(start).tz_convert(ET).date() if start else None
+        side_of = {str(away.get("team_id")): "away", str(home.get("team_id")): "home"}
+        base = dict(event_id=str(ev.get("event_id")), event_name=f"{an} at {hn}", date=d, start_utc=start,
+                    team1=an, team2=hn, bid=None, ask_size=None, fee_coef=0.0)
+        ev_rows = []
+        for m in ev.get("markets") or []:
+            market = TR_MARKETS.get(m.get("market_id"))
+            if not market or (m.get("period_id") or 0) != 0:
+                continue
+            for part in m.get("participants") or []:
+                pname = (part.get("name") or "").strip()
+                side = team = None
+                if market == "total":
+                    side = "over" if pname.lower().startswith("o") else "under" if pname.lower().startswith("u") else None
+                    if side is None:
+                        continue
+                else:
+                    who = side_of.get(str(part.get("id")))
+                    if who is None:   # fall back to the name: "Duke Blue Devils" starts with "Duke"
+                        who = "away" if an and pname.startswith(an) else "home" if hn and pname.startswith(hn) else None
+                    if who is None:
+                        continue
+                    team = an if who == "away" else hn
+                for ln in part.get("lines") or []:
+                    val = _num(ln.get("value"))
+                    if market != "ml" and val is None:
+                        continue
+                    for aff, px in (ln.get("prices") or {}).items():
+                        book = books.get(int(aff)) if str(aff).isdigit() else None
+                        if not book or not isinstance(px, dict) or px.get("is_main_line") is False:
+                            continue
+                        a = _num(px.get("price"))
+                        if a is None or abs(a) < 100:          # 0.0001 = off the board, 0 = no price
+                            continue
+                        ev_rows.append(_row(**base, venue=book, market=market, side_team=team, side=side,
+                                            line=None if market == "ml" else val, ask=american_to_prob(a),
+                                            market_id=f"{ev.get('event_id')}|{m.get('market_id')}|{aff}",
+                                            _who=None if market == "total" else ("away" if team == an else "home")))
+        # spread values should be each team's own handicap (away +3.5 / home -3.5). If a book shows the same
+        # number on both teams, read it as the home spread.
+        for book in {r["venue"] for r in ev_rows}:
+            sp = [r for r in ev_rows if r["venue"] == book and r["market"] == "spread"]
+            a_l = {r["line"] for r in sp if r["_who"] == "away"}
+            h_l = {r["line"] for r in sp if r["_who"] == "home"}
+            if len(a_l) == 1 and a_l == h_l and next(iter(a_l)) != 0:
+                for r in sp:
+                    if r["_who"] == "away":
+                        r["line"] = -r["line"]
+        for r in ev_rows:
+            r.pop("_who", None)
+        rows += ev_rows
+    return rows
+
+
+def _tr_state_path():
+    return TR_DIR / "therundown_state.json"
+
+
+def _tr_load_state():
+    try:
+        return json.loads(_tr_state_path().read_text())
+    except Exception:
+        return {"dates": {}, "spent_utc": {}, "usage": {}}
+
+
+def _tr_offset(d):
+    """TheRundown's `offset`: minutes BEHIND UTC for the day boundary (Eastern: 300 in winter)."""
+    return int(-datetime(d.year, d.month, d.day, 12, tzinfo=ET).utcoffset().total_seconds() // 60)
+
+
+def _tr_budget_ok(state, est, now_utc):
+    """Stay inside the free plan: today's share of the month's remaining data points, and the daily cap.
+    Assumes the monthly allowance resets on the 1st (UTC) - TheRundown's headers only give the daily reset."""
+    u = state.get("usage") or {}
+    day = now_utc.date().isoformat()
+    spent = int((state.get("spent_utc") or {}).get(day, 0))
+    mrem, drem = _num(u.get("X-Datapoints-Monthly-Remaining")), _num(u.get("X-Datapoints-Remaining"))
+    if u.get("day") != day:
+        drem = None                                   # yesterday's daily figure no longer applies
+    if drem is not None and est > drem:
+        return False, "daily data points used up"
+    if mrem is not None:
+        nxt = (now_utc.replace(day=28) + timedelta(days=4)).replace(day=1)
+        days_left = (nxt.date() - now_utc.date()).days
+        if spent + est > (mrem + spent) / max(days_left, 1):
+            return False, "today's share of the monthly data points is used"
+    return True, ""
+
+
+def therundown_get(d, key, session=requests):
+    params = {"market_ids": "1,2,3", "affiliate_ids": ",".join(map(str, SPORTSBOOKS)), "offset": str(_tr_offset(d)),
+              "main_line": "true", "hide_no_markets": "true", "event_status": "STATUS_SCHEDULED"}
+    url = f"{THERUNDOWN}/sports/{THERUNDOWN_SPORT}/events/{d.isoformat()}"
+    hdr = dict(UA, **{"X-TheRundown-Key": key})
+    r = session.get(url, params=params, headers=hdr, timeout=30)
+    if r.status_code == 400:                          # older deployments reject the status filter
+        params.pop("event_status")
+        r = session.get(url, params=params, headers=hdr, timeout=30)
+    r.raise_for_status()
+    usage = {k: r.headers.get(k) for k in ("X-Datapoints", "X-Datapoints-Remaining", "X-Datapoints-Monthly-Remaining",
+                                           "X-Datapoints-Reset", "X-Bookmakers", "X-Data-Delay-Seconds", "X-Tier")
+             if r.headers.get(k) is not None}
+    return r.json(), usage
+
+
+def fetch_therundown(start, end, session=requests, now=None):
+    """Sportsbook quotes for start..end. Pulls only when due and within budget; otherwise serves the last pull."""
+    key = os.environ.get("THERUNDOWN_API_KEY")
+    if not key:
+        raise RuntimeError("THERUNDOWN_API_KEY not set")
+    now = now or datetime.now(timezone.utc)
+    now_et = now.astimezone(ET)
+    state = _tr_load_state()
+    frames, notes = [], []
+    d = start
+    while d <= end:
+        iso = d.isoformat()
+        cache = TR_DIR / f"therundown_{iso}.csv"
+        last = (state["dates"].get(iso) or {})
+        fetched = pd.Timestamp(last["fetched"]) if last.get("fetched") else None
+        if d <= now_et.date():
+            due = fetched is None or (now - fetched.to_pydatetime()).total_seconds() >= TR_EVERY_HOURS * 3600 - 600
+        else:
+            due = now_et.hour >= TR_TOMORROW_FROM_HOUR and (fetched is None or fetched.tz_convert(ET).date() < now_et.date())
+        if due:
+            costs = [v.get("cost") for v in state["dates"].values() if v.get("cost")]
+            est = int(1.15 * (last.get("cost") or (sum(costs) / len(costs) if costs else 1500)))
+            ok, why = _tr_budget_ok(state, est, now)
+            if not ok:
+                notes.append(f"{iso}: paused ({why})")
+            else:
+                try:
+                    payload, usage = therundown_get(d, key, session)
+                except requests.HTTPError as e:
+                    code = e.response.status_code if e.response is not None else None
+                    notes.append(f"{iso}: " + ("plan limit reached" if code == 429 else "bad API key" if code == 401
+                                               else f"HTTP {code}"))
+                    if code == 401:
+                        raise
+                else:
+                    df = pd.DataFrame(parse_therundown(payload), columns=COLS)
+                    TR_DIR.mkdir(parents=True, exist_ok=True)
+                    df.to_csv(cache, index=False)
+                    cost = int(_num(usage.get("X-Datapoints")) or 0)
+                    day = now.date().isoformat()
+                    state["spent_utc"] = {k: v for k, v in (state.get("spent_utc") or {}).items()
+                                          if k >= (now.date() - timedelta(days=7)).isoformat()}
+                    state["spent_utc"][day] = int(state["spent_utc"].get(day, 0)) + cost
+                    state["dates"][iso] = {"fetched": now.isoformat(timespec="seconds"), "cost": cost, "quotes": len(df)}
+                    state["usage"] = dict(usage, day=day)
+                    bm = (usage.get("X-Bookmakers") or "").lower()
+                    if bm and bm != "all" and len(df) == 0:
+                        notes.append(f"plan books: {bm}")
+        if cache.exists():
+            df = pd.read_csv(cache)
+            if len(df):
+                df["date"] = pd.to_datetime(df.date).dt.date
+                frames.append(df)
+        d += timedelta(days=1)
+    # forget dates more than a week old
+    cutoff = (now_et.date() - timedelta(days=7)).isoformat()
+    state["dates"] = {k: v for k, v in state["dates"].items() if k >= cutoff}
+    TR_DIR.mkdir(parents=True, exist_ok=True)
+    _tr_state_path().write_text(json.dumps(state, indent=1))
+    q = pd.concat(frames, ignore_index=True)[COLS] if frames else pd.DataFrame(columns=COLS)
+    times = [pd.Timestamp(state["dates"][x]["fetched"]).tz_convert(ET) for x in state["dates"]
+             if x >= start.isoformat() and x <= end.isoformat() and state["dates"][x].get("fetched")]
+    asof = max(times).strftime("%-I:%M %p ET").lower().replace(" et", " ET") if times else None
+    rem = (state.get("usage") or {}).get("X-Datapoints-Monthly-Remaining")
+    info = (f" · as of {asof}" if asof else "") + (f" · {int(float(rem)):,} pts left this month" if rem else "")
+    return q, info + ("" if not notes else " · " + "; ".join(notes))
+
+
 # -------------------------------------------------------------------------------------------- all
 FETCHERS = {"Kalshi": fetch_kalshi, "Polymarket US": fetch_pmus, "Novig": fetch_novig, "ProphetX": fetch_prophetx}
 
 
 def _reason(e):
     t, msg = type(e).__name__, str(e)
-    if "NOVIG_KEY_ID" in msg or "PROPHETX keys" in msg:
+    if "NOVIG_KEY_ID" in msg or "PROPHETX keys" in msg or "THERUNDOWN_API_KEY" in msg:
         return "no API key set"
     if t in ("ProxyError", "ConnectionError", "ConnectTimeout", "ReadTimeout", "Timeout", "SSLError"):
         return "couldn't connect"
@@ -558,5 +763,16 @@ def fetch_all(start, end, venues=None):
             status[name] = "skipped: " + _reason(e)
             if name == "Kalshi" and ROBINHOOD_FROM_KALSHI:
                 status["Robinhood"] = "skipped: uses Kalshi's book, which didn't load"
+    if not venues or "Sportsbooks" in venues:
+        try:
+            df, info = fetch_therundown(start, end, s)
+            frames.append(df)
+            n = df.venue.value_counts().to_dict() if len(df) else {}
+            books = "/".join(b.split()[0].replace("DraftKings", "DK").replace("FanDuel", "FD") for b in REFERENCE_VENUES
+                             if n.get(b))
+            status["Sportsbooks"] = (f"ok: {len(df)} quotes ({books}){info}" if len(df)
+                                     else f"ok: 0 quotes{info}")
+        except Exception as e:
+            status["Sportsbooks"] = "skipped: " + _reason(e)
     q = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=COLS)
     return q, status

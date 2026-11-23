@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import venues
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = Path(__file__).parent / "dashboard.html"
@@ -51,7 +52,7 @@ def build(proj, board, status, results, ratings, cal, asof, model_asof=None, rec
         model_asof=model_asof,
         venues=status,
         params=dict(sd_margin=cal["resid_sd"], sd_total=cal["total_sd"], sigma_ml=cal["sigma"],
-                    min_edge=0.03, manual_venues=MANUAL_VENUES),
+                    min_edge=0.03, manual_venues=MANUAL_VENUES, reference_venues=venues.REFERENCE_VENUES),
         games=games, quotes=q, records={str(k): v for k, v in (records or {}).items()},
         results=results,
         ratings=_records(ratings, ["rank", "team", "games", "adj_em", "adj_o", "adj_d", "adj_t"]) if ratings is not None else [],

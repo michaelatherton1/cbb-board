@@ -2,7 +2,8 @@ name: CBB dashboard
 
 # Nov-Apr. Times are UTC (ET + 5). 14:17 UTC ~ 9am ET: the first run of the day re-downloads teams,
 # box scores and schedule, re-rates every team, projects today + tomorrow and updates the model record.
-# Every run (hourly, 9am-11pm ET) re-pulls Kalshi / Polymarket US / Novig / ProphetX prices (Robinhood is derived from Kalshi) and rebuilds the page.
+# Every run (hourly, 9am-11pm ET) re-pulls Kalshi / Polymarket US / Novig / ProphetX prices (Robinhood is derived from Kalshi) and rebuilds the page;
+# sportsbook prices (TheRundown free plan) are pulled about every 3 hours within the plan's data-point budget.
 on:
   schedule:
     - cron: "17 14-23 * 11,12,1,2,3,4 *"
@@ -25,6 +26,7 @@ jobs:
       PROPHETX_ACCESS_KEY: ${{ secrets.PROPHETX_ACCESS_KEY }}
       PROPHETX_SECRET_KEY: ${{ secrets.PROPHETX_SECRET_KEY }}
       PROPHETX_AFFILIATE_KEY: ${{ secrets.PROPHETX_AFFILIATE_KEY }}
+      THERUNDOWN_API_KEY: ${{ secrets.THERUNDOWN_API_KEY }}
       TZ: America/Chicago
     steps:
       - uses: actions/checkout@v4

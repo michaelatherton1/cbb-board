@@ -23,6 +23,7 @@ prices, finds the best line for each outcome, flags arbitrage, and rebuilds a ph
 | Novig | automatic once you add an API key (below): moneyline, spread, total |
 | ProphetX | automatic once you add API keys (below): moneyline, spread, total incl. alternate lines |
 | Robinhood | automatic, derived: Robinhood has no API but routes college basketball to Kalshi's order book, so its price is Kalshi's plus Robinhood's fees (≤1¢ commission + 1¢ exchange fee per contract). If Robinhood moves a game to its own exchange (Rothera), the in-app price can differ: use *Add a price*. Turn off with `ROBINHOOD_FROM_KALSHI=0`. |
+| DraftKings, FanDuel, BetMGM **sportsbooks** | automatic once you add a TheRundown API key (below). Reference columns only: sportsbooks aren't the Texas prediction apps, so they never count toward Best, arbitrage or edges. The free plan has these three books, a 5-minute delay and 20,000 data points a day / 200,000 a month, so today's games are pulled about every 3 hours (9am–11pm ET) and tomorrow's once from 5pm ET; a run that would go over today's share of the month's points is skipped and the last pull stays on the page. Pulls and usage are logged in `data/out/therundown_state.json`. `THERUNDOWN_EVERY_HOURS` changes the spacing. |
 | DraftKings Predictions, FanDuel Predicts, Fanatics Markets, Underdog, others | **by hand**: no public price feed exists. Tap *Add a price* on a game and type what the app shows (¢, $ or American odds). Saved on that device; the page recalculates best lines, edges and arbitrage immediately. Or list prices in `data/manual_quotes.csv` (columns `venue,date,away,home,market,side,line,ask,fee_coef`) and the next run includes them for everyone. |
 
 ## Set up on GitHub (one time)
@@ -36,7 +37,8 @@ prices, finds the best line for each outcome, flags arbitrage, and rebuilds a ph
 5. Optional, for ProphetX: prophetx.co → Settings → Token → create an access key + secret key, then add repo
    secrets `PROPHETX_ACCESS_KEY` and `PROPHETX_SECRET_KEY`. (Or, if ProphetX issues you a Market Data key,
    `PROPHETX_AFFILIATE_KEY`.) The job only reads markets; it never places orders.
-6. Actions → *CBB dashboard* → *Run workflow* once to build it now. After that it runs hourly, 9am–11pm ET,
+6. Optional, for sportsbook prices: add repo secret `THERUNDOWN_API_KEY` (your therundown.io key).
+7. Actions → *CBB dashboard* → *Run workflow* once to build it now. After that it runs hourly, 9am–11pm ET,
    November through April.
 
 ## Files
@@ -48,7 +50,7 @@ prices, finds the best line for each outcome, flags arbitrage, and rebuilds a ph
 | `cbb/model.py` | opponent-adjusted efficiency + tempo ratings, refit daily with earlier games only |
 | `cbb/daily.py` | rate every team as of a date and project upcoming games |
 | `cbb/results.py` | model record vs DraftKings closing lines |
-| `cbb/venues.py` | Kalshi, Polymarket US, Novig (signed requests) and ProphetX clients; Robinhood derived from Kalshi |
+| `cbb/venues.py` | Kalshi, Polymarket US, Novig (signed requests), ProphetX and TheRundown (sportsbooks) clients; Robinhood derived from Kalshi |
 | `cbb/names.py` | team-name matching between venues and ESPN |
 | `cbb/board.py` | match prices to games, score vs the model, best lines, arbitrage |
 | `cbb/webpage.py`, `cbb/dashboard.html` | build the dashboard page |

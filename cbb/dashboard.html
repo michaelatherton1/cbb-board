@@ -131,9 +131,10 @@ tr.detail .card{margin:6px 0 0}
       <input type="search" id="q" placeholder="Search team" aria-label="Search team" style="flex:1;min-width:140px">
       <select id="sort" aria-label="Sort games"><option value="tip">By tip time</option><option value="edge">Biggest edge</option></select>
       <label class="sub" style="white-space:nowrap"><input type="checkbox" id="showManual" checked> DK / FD / Fanatics</label>
+      <label class="sub" style="white-space:nowrap"><input type="checkbox" id="showBooks" checked> Sportsbooks</label>
     </div>
     <div class="gridwrap"><table class="odds" id="oddsTbl"></table></div>
-    <p class="note"><span class="cell best" style="min-width:0;padding:1px 6px">Green</span> = best price for that side across the apps (same line: cheapest; different lines: compared with the model's chance of covering). ▲ = at least 3¢ better than the model's price. Prices include estimated fees. Spreads and totals show each app's main line (the one priced nearest even), and <b>Best</b> repeats the green one. Tap a team for every price, including alternate lines; tap <b>+</b> to add a price from an app without a feed. ⚖ = arbitrage available (locked profit per $1), ▲ = model edge, N = neutral site.</p>
+    <p class="note"><span class="cell best" style="min-width:0;padding:1px 6px">Green</span> = best price for that side across the apps (same line: cheapest; different lines: compared with the model's chance of covering). ▲ = at least 3¢ better than the model's price. Prices include estimated fees. Spreads and totals show each app's main line (the one priced nearest even), and <b>Best</b> repeats the green one. Tap a team for every price, including alternate lines; tap <b>+</b> to add a price from an app without a feed. ⚖ = arbitrage available (locked profit per $1), ▲ = model edge, N = neutral site. <b>DK book / FD book / BetMGM</b> are sportsbook prices (vig included) from TheRundown's free plan, refreshed a few times a day: reference only, so they never count toward Green, Best, arbitrage or edges.</p>
   </section>
 
   <section id="p-arbs" role="tabpanel" hidden>
@@ -230,6 +231,9 @@ function parsePrice(s){s=String(s).trim().replace("¢","");if(!s)return null;con
   if(/^[+-]/.test(s)&&Math.abs(v)>=100) return v<0?(-v)/(-v+100):100/(v+100);   // American odds
   if(v>0&&v<1) return v; if(v>=1&&v<100) return v/100; return null;}
 
+const REF_VENUES=P.reference_venues||[];
+const isRef=v=>REF_VENUES.includes(v);
+const tradable=qs=>qs.filter(q=>!isRef(q.venue));      // sportsbooks: shown for reference, never Best / arb / edge
 function quotesFor(gid){
   const g=GAMES.get(gid);
   const auto=D.quotes.filter(q=>q.game_id===gid);
@@ -284,7 +288,8 @@ function header(){
     (D.model_asof?` · model rated through ${D.model_asof}`:"");
   const v=Object.entries(D.venues||{}).filter(([k])=>!/matched/.test(k)).map(([k,s])=>{
     const ok=/^ok/.test(s);const n=(String(s).match(/(\d+) quotes/)||[])[1];
-    return `<span class="pill" title="${esc(s)}">${ok?"✓":"✕"} <b>${esc(k)}</b>${n?" "+n:ok?"":" — "+esc(String(s).replace(/^skipped:\s*/,"").slice(0,40))}</span>`;});
+    const at=(String(s).match(/as of ([^·;]+)/)||[])[1],pause=/paused|limit/.test(s);
+    return `<span class="pill" title="${esc(s)}">${ok?"✓":"✕"} <b>${esc(k)}</b>${n?" "+n:ok?"":" — "+esc(String(s).replace(/^skipped:\s*/,"").slice(0,40))}${at?` <span class="am">· ${esc(at.trim())}${pause?" · paused":""}</span>`:""}</span>`;});
   v.push(`<span class="pill" title="No public feed: add prices by hand on each game">✎ <b>DraftKings / FanDuel / Fanatics</b> by hand${MANUAL.length?" ("+MANUAL.length+")":""}</span>`);
   $("#venues").innerHTML=v.join("");
   $("#dates").innerHTML=dates.map(d=>`<button class="chipbtn" data-date="${d}" aria-pressed="${state.date===d}">${dayTxt(d)}</button>`).join("")+
@@ -294,7 +299,7 @@ $("#dates").addEventListener("click",e=>{const b=e.target.closest("[data-date]")
 // ---------- games ----------
 const OUTS=[["ml","away"],["ml","home"],["spread","away"],["spread","home"],["total","over"],["total","under"]];
 function gameCard(g){
-  const qs=quotesFor(g.game_id),best=bestByOutcome(qs),arbs=arbsFor(g,qs);
+  const qs=quotesFor(g.game_id),tq=tradable(qs),best=bestByOutcome(tq),arbs=arbsFor(g,tq);
   const top=Object.values(best).reduce((m,q)=>q.edge>(m?m.edge:-9)?q:m,null);
   const badges=(arbs.length?`<span class="badge b-arb">⚖ Arb +${(arbs[0].profit*100).toFixed(1)}¢</span>`:"")+
     (top&&top.edge>=P.min_edge?`<span class="badge b-edge">▲ ${esc(pick(g,top))} ${edgeTxt(top.edge)}</span>`:"")+
@@ -307,7 +312,7 @@ function gameCard(g){
       <td>${esc(q.venue)}${q.manual?'<span class="mine">you</span>':""}</td><td class="n">${Math.round(q.model_prob*100)}%</td>
       <td class="n ${q.edge>=0?"pos":"neg"}">${edgeTxt(q.edge)}</td></tr>`;}).join("");
   const all=qs.slice().sort((a,b)=>(a.market+a.side).localeCompare(b.market+b.side)||(a.line||0)-(b.line||0)||a.ask-b.ask).map(q=>
-    `<tr><td>${esc(pick(g,q))}</td><td>${esc(q.venue)}${q.manual?`<span class="mine">you</span> <button class="x" data-del="${q.id}" aria-label="Delete">✕</button>`:""}</td>
+    `<tr><td>${esc(pick(g,q))}</td><td>${esc(q.venue)}${isRef(q.venue)?'<span class="mine">ref</span>':""}${q.manual?`<span class="mine">you</span> <button class="x" data-del="${q.id}" aria-label="Delete">✕</button>`:""}</td>
      <td class="n">${cents(q.ask)}</td><td class="n">${q.fee?cents(q.fee):"–"}</td><td class="n">${Math.round(q.model_prob*100)}%</td><td class="n ${q.edge>=0?"pos":"neg"}">${edgeTxt(q.edge)}</td></tr>`).join("");
   return `<article class="card"><div class="ghead"><span class="mu">${esc(g.away)} @ ${esc(g.home)}</span>${badges}</div><div class="model">${model}</div>
     ${rows?`<div class="scroll"><table><thead><tr><th>Top model edge</th><th class="n">Price</th><th>Where</th><th class="n">Model</th><th class="n">Edge</th></tr></thead><tbody>${rows}</tbody></table></div>`:""}
@@ -317,13 +322,14 @@ function gameCard(g){
 // ---------- odds grid ----------
 const AUTO_VENUES=["Kalshi","Polymarket US","Novig","ProphetX","Robinhood"];
 const MANUAL_COLS=["DraftKings Predictions","FanDuel Predicts","Fanatics Markets"];
-const SHORT={"Polymarket US":"Poly US","DraftKings Predictions":"DK Predictions","FanDuel Predicts":"FD Predicts","Fanatics Markets":"Fanatics"};
+const SHORT={"Polymarket US":"Poly US","DraftKings Predictions":"DK Predictions","FanDuel Predicts":"FD Predicts","Fanatics Markets":"Fanatics",
+  "DraftKings Sportsbook":"DK book","FanDuel Sportsbook":"FD book","BetMGM":"BetMGM"};
 state.mkt="spread";state.fmt="am";state.open=new Set();
 function venueCols(){
   const used=new Set(MANUAL.map(m=>m.venue));
   const extra=P.manual_venues.filter(v=>used.has(v)&&!AUTO_VENUES.includes(v)&&!MANUAL_COLS.includes(v));
-  return AUTO_VENUES.concat($("#showManual").checked?MANUAL_COLS.concat(extra):[]);}
-const isManualVenue=v=>!AUTO_VENUES.includes(v);
+  return AUTO_VENUES.concat($("#showManual").checked?MANUAL_COLS.concat(extra):[],$("#showBooks").checked?REF_VENUES:[]);}
+const isManualVenue=v=>!AUTO_VENUES.includes(v)&&!isRef(v);
 function cheapest(arr){return arr.reduce((m,q)=>!m||q.ask+q.fee<m.ask+m.fee?q:m,null);}
 function bestOf(arr){return arr.reduce((m,q)=>!m||(q.edge??-9)>(m.edge??-9)?q:m,null);}
 // one venue's offer for each row of a market: [row1, row2] = [away, home] or [over, under]
@@ -342,14 +348,14 @@ function fmtPx(q){const c=q.ask+q.fee;return state.fmt==="am"?amer(c):cents(c);}
 function lineTxt(q,mkt){if(mkt==="total")return (q.side==="over"?"o":"u")+q.line;return (q.line>0?"+":q.line<0?"−":"")+Math.abs(q.line);}
 function cellHTML(q,mkt,best,showVenue){
   if(!q) return "";
-  const mk=q.edge!=null&&q.edge>=P.min_edge?'<span class="mk" title="Model edge">▲</span>':"";
+  const mk=!isRef(q.venue)&&q.edge!=null&&q.edge>=P.min_edge?'<span class="mk" title="Model edge">▲</span>':"";
   const vn=showVenue?`<span class="vn">${esc(SHORT[q.venue]||q.venue)}</span>`:"";
   if(mkt==="ml") return `<span class="cell ml${best?" best":""}"><span class="px">${fmtPx(q)}</span>${mk}${vn}</span>`;
   return `<span class="cell${best?" best":""}"><span class="ln">${lineTxt(q,mkt)}</span><span class="px">${fmtPx(q)}</span>${mk}${vn}</span>`;}
 function miniHTML(q,mkt,best){
   const k={spread:"S",ml:"M",total:"T"}[mkt];
   if(!q) return `<div class="mini"><span class="k">${k}</span><span class="dash">–</span></div>`;
-  const mk=q.edge!=null&&q.edge>=P.min_edge?'<span class="mk">▲</span>':"";
+  const mk=!isRef(q.venue)&&q.edge!=null&&q.edge>=P.min_edge?'<span class="mk">▲</span>':"";
   return `<div class="mini${best?" best":""}"><span class="k">${k}</span>${mkt==="ml"?"":`<b>${lineTxt(q,mkt)}</b>`}<span class="px">${fmtPx(q)}</span>${mk}</div>`;}
 function modelCell(g,mkt,row){
   const p=row===0?1-g.home_win_prob:g.home_win_prob;
@@ -363,7 +369,7 @@ function modelMini(g,mkt,row){
   return `<div class="mini"><span class="k">T</span><b>${row===0?"o":"u"}${g.total.toFixed(1)}</b></div>`;}
 
 function gameRows(g,cols){
-  const qs=quotesFor(g.game_id),arbs=arbsFor(g,qs);
+  const qs=quotesFor(g.game_id),tq=tradable(qs),arbs=arbsFor(g,tq);
   const mkts=state.mkt==="all"?["spread","ml","total"]:[state.mkt];
   const byVenue={};for(const v of cols)byVenue[v]={};
   const bestCol={},hl={};
@@ -372,9 +378,9 @@ function gameRows(g,cols){
     for(const v of cols) byVenue[v][m]=venueOffer(mq.filter(q=>q.venue===v),m);
     for(let r=0;r<2;r++){
       // Best = the green one: picked from each app's main line only (searching Kalshi's alt-line ladder picked long shots)
-      const shown=cols.map(v=>byVenue[v][m][r]).filter(Boolean);
+      const shown=cols.filter(v=>!isRef(v)).map(v=>byVenue[v][m][r]).filter(Boolean);
       hl[m+r]=bestOf(shown); bestCol[m+r]=hl[m+r];}}
-  const top=qs.reduce((m,q)=>(q.edge??-9)>(m?m.edge:-9)?q:m,null);
+  const top=tq.reduce((m,q)=>(q.edge??-9)>(m?m.edge:-9)?q:m,null);
   const badges=(arbs.length?`<span class="badge b-arb" title="Arbitrage available">⚖ ${(arbs[0].profit*100).toFixed(1)}¢</span>`:"")+
     (top&&top.edge>=P.min_edge?`<span class="badge b-edge" title="Model edge of 3¢ or more">▲</span>`:"")+(g.neutral?`<span class="badge b-none" title="Neutral site">N</span>`:"");
   const rec=id=>D.records&&D.records[id]?`<span class="rec">(${D.records[id]})</span>`:"";
@@ -394,12 +400,12 @@ function gameRows(g,cols){
 
 function drawGames(){
   const gs=visibleGames(),cols=venueCols();
-  const head=`<thead><tr><th class="gcol">Game</th><th class="mcol">Model</th><th>Best</th>${cols.map(v=>`<th>${esc(SHORT[v]||v)}${isManualVenue(v)?'<div class="am" style="margin:0;font-weight:400">by hand</div>':""}</th>`).join("")}</tr></thead>`;
+  const head=`<thead><tr><th class="gcol">Game</th><th class="mcol">Model</th><th>Best</th>${cols.map(v=>`<th${isRef(v)?' class="refh"':""}>${esc(SHORT[v]||v)}${isManualVenue(v)?'<div class="am" style="margin:0;font-weight:400">by hand</div>':isRef(v)?'<div class="am" style="margin:0;font-weight:400">reference</div>':""}</th>`).join("")}</tr></thead>`;
   $("#oddsTbl").innerHTML=gs.length?head+gs.map(g=>gameRows(g,cols)).join(""):`<tbody><tr><td class="empty">No games for this filter.</td></tr></tbody>`;}
 $("#mktSeg").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;state.mkt=b.dataset.m;
   for(const x of $("#mktSeg").querySelectorAll("button"))x.setAttribute("aria-pressed",x===b);drawGames();});
 $("#fmt").addEventListener("change",e=>{state.fmt=e.target.value;drawGames();});
-$("#showManual").addEventListener("change",drawGames);
+$("#showManual").addEventListener("change",drawGames);$("#showBooks").addEventListener("change",drawGames);
 $("#oddsTbl").addEventListener("click",e=>{
   const o=e.target.closest("[data-open]");if(o){const id=+o.dataset.open;state.open.has(id)?state.open.delete(id):state.open.add(id);drawGames();return;}
   const v=e.target.closest("[data-addv]");if(v){openDlg(+v.dataset.gid,{venue:v.dataset.addv,market:v.dataset.m,side:v.dataset.side});return;}
@@ -409,7 +415,7 @@ $("#oddsTbl").addEventListener("click",e=>{
 function visibleGames(){
   const q=$("#q").value.trim().toLowerCase();
   let gs=D.games.filter(g=>(state.date==="all"||g.date===state.date)&&(!q||(g.away+" "+g.home).toLowerCase().includes(q)));
-  if($("#sort").value==="edge"){const e=g=>Math.max(-1,...quotesFor(g.game_id).map(x=>x.edge??-1));gs=gs.sort((a,b)=>e(b)-e(a));}
+  if($("#sort").value==="edge"){const e=g=>Math.max(-1,...tradable(quotesFor(g.game_id)).map(x=>x.edge??-1));gs=gs.sort((a,b)=>e(b)-e(a));}
   else gs=gs.sort((a,b)=>String(a.tipoff).localeCompare(String(b.tipoff)));
   return gs;}
 $("#q").addEventListener("input",drawGames);$("#sort").addEventListener("change",drawGames);
@@ -441,7 +447,7 @@ $("#frm").addEventListener("submit",e=>{
 
 // ---------- arbs ----------
 function drawArbs(){
-  const all=[];for(const g of D.games){if(state.date!=="all"&&g.date!==state.date)continue;all.push(...arbsFor(g,quotesFor(g.game_id)));}
+  const all=[];for(const g of D.games){if(state.date!=="all"&&g.date!==state.date)continue;all.push(...arbsFor(g,tradable(quotesFor(g.game_id))));}
   all.sort((a,b)=>b.profit-a.profit);
   $("#arbList").innerHTML=all.length?all.map(a=>{const leg=(q,i)=>`<div>${i}. Buy <b>${esc(pick(a.g,q))}</b> on <b>${esc(q.venue)}</b>${q.manual?'<span class="mine">you</span>':""} at ${cents(q.ask)}${q.fee?` <span class="am">+${cents(q.fee)} fee</span>`:""}${q.ask_size?` <span class="am">${Math.round(q.ask_size)} avail.</span>`:""}</div>`;
     return `<article class="card"><div class="ghead"><span class="tip">${esc(dayTxt(a.g.date))} ${esc(tipTxt(a.g.tipoff))}</span><span class="mu">${esc(a.g.away)} @ ${esc(a.g.home)}</span>
@@ -456,7 +462,7 @@ function drawArbs(){
 function drawEdges(){
   const me=+$("#minEdge").value,mk=$("#mkt").value,vn=$("#ven").value;const rows=[];
   for(const g of D.games){if(state.date!=="all"&&g.date!==state.date)continue;
-    for(const q of quotesFor(g.game_id)) if(q.edge>=me&&q.ask>=0.05&&q.ask<=0.95&&(!mk||q.market===mk)&&(!vn||q.venue===vn)) rows.push([g,q]);}
+    for(const q of tradable(quotesFor(g.game_id))) if(q.edge>=me&&q.ask>=0.05&&q.ask<=0.95&&(!mk||q.market===mk)&&(!vn||q.venue===vn)) rows.push([g,q]);}
   rows.sort((a,b)=>b[1].edge-a[1].edge);
   $("#edgeTbl").innerHTML=`<thead><tr><th>Pick</th><th>Venue</th><th class="n">Price</th><th class="n">Model</th><th class="n">Edge</th></tr></thead><tbody>`+
     (rows.length?rows.map(([g,q])=>`<tr><td style="min-width:120px"><b>${esc(pick(g,q))}</b><div class="am" style="margin:0">${esc(g.away)} @ ${esc(g.home)} · ${esc(tipTxt(g.tipoff))}</div></td><td>${esc(q.venue)}${q.manual?'<span class="mine">you</span>':""}</td>
@@ -464,7 +470,7 @@ function drawEdges(){
      :`<tr><td colspan="5" class="empty">Nothing at this threshold.</td></tr>`)+"</tbody>";
   return rows.length;}
 ["minEdge","mkt","ven"].forEach(id=>$("#"+id).addEventListener("change",drawEdges));
-$("#ven").innerHTML+=[...new Set(D.quotes.map(q=>q.venue).concat(P.manual_venues))].map(v=>`<option>${esc(v)}</option>`).join("");
+$("#ven").innerHTML+=[...new Set(D.quotes.map(q=>q.venue).concat(P.manual_venues))].filter(v=>!isRef(v)).map(v=>`<option>${esc(v)}</option>`).join("");
 
 // ---------- record ----------
 function money(u){const s=+$("#stake").value;const v=u*s;return (v>=0?"+$":"−$")+Math.abs(v).toFixed(0);}
