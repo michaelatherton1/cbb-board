@@ -54,7 +54,7 @@ gap. Next candidates:
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
 
-## EXP-006 — Totals: separate prior strength for team style/pace (2026-11-23) — PRE-REGISTERED
+## EXP-006 — Totals: separate prior strength for team style/pace (2026-11-23) — KEEP (pending owner merge)
 
 **Question.** Totals use the same ridge penalty as margins (lam_eff on O and D). Is a team's scoring
 style (O+D)/2 more stable than its quality (O-D)/2, so that it should be pulled harder toward the prior?
@@ -76,3 +76,37 @@ KEEP only if all three hold:
 3. Margin MAE is no worse by more than 0.005 (baseline 9.046 -> <= 9.051).
 Reported but not part of the decision: total MAE vs the closing total where a usable close exists (2021-23, 2026).
 Otherwise REJECT. No re-tuning after the holdout is seen.
+
+### Result (holdout run once, 2021-2026, n = 32,367)
+| | Baseline | lam_style = 12 |
+|---|---|---|
+| Total MAE | 13.278 | **13.226** (-0.0515; 95% CI by date -0.066 to -0.037) |
+| Seasons improved | | **6 / 6** (-0.034 to -0.080) |
+| Margin MAE | 9.0457 | 9.0457 (identical) |
+| Vs closing total (2021-23 + 2026, n = 19,904; market 13.064) | 13.316 | 13.261 |
+
+All three pre-registered criteria are met. Production `data/calibration.json` refit on all 2012-2026 seasons:
+only the totals terms change (bt [0.826, 24.26] -> [0.884, 16.00]; total_sd 17.04 -> 16.99).
+
+### Skeptic (independent): PASS WITH NOTES
+- No leakage: research used 2012-2020 only; calibration in the backtest is fit on TRAIN only; the optimum is flat for
+  lam_style 8-16; the holdout gain is larger than the research gain.
+- **Process gap (disclosed):** the engineer's reproduction script called `backtest.run`, which computes 2021-2026
+  predictions too (`data/backtest_exp006_check.parquet`, 13:07), before the pre-registration was committed (17:05). The
+  lead's written criteria (13:06) predate it, the script deleted the frame and filtered to <= 2020, and no holdout
+  metrics were printed; no evidence anyone looked. Rule from now on: reproduction scripts run on a games slice ending 2020.
+- Margins are invariant on the production path, but NOT under a RosterPrior override (2015-16 test: mean |diff| 0.097).
+  Docstring updated. `scoreboard --roster` baselines shift after merge.
+- Live 2027 check (not holdout, n = 945, Nov 1-22): total MAE 13.552 -> 13.516 (-0.036; 95% CI -0.151 to +0.094). Same sign,
+  too noisy to confirm. Both are worse than the opening total (13.251) and the close (13.041).
+- **The model adds no information beyond the closing total** (regression coefficient 0.01). Holdout O/U win rate is below
+  the 52.4% breakeven at every edge threshold. EXP-006 is a modelling improvement, not a betting edge: totals edges on
+  the dashboard should be labelled not usable, hidden, or given a much higher threshold.
+
+### If merged, expect
+- Ratings tab: adj_em and ranks unchanged; adj_o / adj_d move ~1 pt/100 on average (up to 4.1).
+- Record tab: the 2027 O/U record is recomputed with the new model (all games 52.3% -> 51.8%; |edge| >= 3: 53.7% -> 55.3%).
+- Today's projections stay on the old model unless `data/out/model_<date>.json` is removed and the workflow re-run.
+- `experiments/results/baseline.json` must be re-run for totals. `cbb/tune.py` writes `asdict(Params())` and would reset
+  lam_style to null; re-add it after any re-tune.
+

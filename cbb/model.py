@@ -9,7 +9,8 @@ Each day's fit is a weighted ridge regression whose penalty pulls every team tow
 prior = r * (last season's final rating). Recency weights decay with a half-life in days.
 
 The O/D penalty is a 2x2 block per team: strength lam_eff on quality q = (O - D)/2 (drives margins) and
-lam_style on style s = (O + D)/2 (drives totals only). lam_style = None (or = lam_eff) is the plain
+lam_style on style s = (O + D)/2 (drives totals only; margins are invariant except under a RosterPrior override,
+whose O/D regressions see lam_style through past ratings). lam_style = None (or = lam_eff) is the plain
 diagonal ridge lam_eff * ((O - O0)^2 + (D - D0)^2). Margin predictions do not depend on lam_style.
 """
 from dataclasses import dataclass, field
