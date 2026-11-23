@@ -1,0 +1,47 @@
+name: EXP-009a Kalshi totals history
+
+# Data collection for EXP-009a: Kalshi's history for college basketball TOTALS markets (series KXNCAAMBTOTAL).
+# Runs only on pushes to the experiment branch that touch the fetcher or this file. Public Kalshi endpoints, no secrets.
+# The data comes back as a workflow artifact (30 days); nothing is committed.
+on:
+  push:
+    branches: [agents/exp-009-kalshi-totals]
+    paths:
+      - experiments/exp009/kalshi_history.py
+      - .github/workflows/exp009-kalshi-history.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: exp009-kalshi-history
+  cancel-in-progress: true        # a newer push replaces a running pull, so only one pull hits Kalshi at a time
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OUT: exp009_out
+      # stop starting new requests after 70 min (leaves time to merge the files and upload within the 90-min timeout)
+      FETCH_ARGS: --budget-min 70 --rps 9 --workers 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas pyarrow
+      - name: Offline self-test (mocked API)
+        run: python experiments/exp009/kalshi_history.py --self-test
+      - name: Fetch Kalshi history
+        run: python experiments/exp009/kalshi_history.py --out "$OUT" $FETCH_ARGS
+      - name: List output
+        if: always()
+        run: ls -la "$OUT" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exp009-kalshi-history
+          path: ${{ env.OUT }}
+          retention-days: 30
+          if-no-files-found: warn
