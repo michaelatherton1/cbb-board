@@ -53,3 +53,28 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-003 — Game-day news overlay (started 2026-11-23) — FORWARD-TRACKED (can't be backtested)
+
+**Why.** The model has no injury, lineup or news data. There's no historical injury data to backtest with, so the
+test is forward: log a note before tip on every game where model and books differ by 3+ pts, then grade the notes
+against where the line closed and against the result (`experiments/grade_news.py`, using the Record tab's
+`data/out/results_games.csv`).
+
+**Day 1 (Nov 23).** 34 games; 30 not yet started with a book line; 6 flagged. A news agent
+(`.claude/agents/news-checker.md`) checked all 6 before tip (12:16-12:20 CT).
+- Line direction: no neutral-site reversals. Two lines differed from our snapshot: Temple -4.5 vs -2.5 flagged;
+  Kansas -35.5 vs -32.5.
+- Leans:
+  - supports_model ×2, both low: Akron coaching change and Wright State's form; Temple G Jordan Marsh wrist injury,
+    status unknown.
+  - supports_market ×1, low: Kansas's Tyran Stokes missed a game last week, so the rating includes a game without
+    him.
+  - no_relevant_news ×3.
+- Lines already moving toward the model before tip: Kansas (opened -37.5), Wichita State at one site (opened -21.5).
+
+**Review.** Lead review only today (no separate skeptic agent, to save cost): every fact has a source URL. Most stats
+pages are undated. All leans are low confidence. Notes are logged, not acted on.
+
+**Grading plan.** Run `python experiments/grade_news.py` after each morning update. Decide after ~40-60 graded
+games (roughly 2-3 weeks of daily runs). Until then, any split by lean is noise.
