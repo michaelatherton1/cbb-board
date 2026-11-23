@@ -113,3 +113,27 @@ only the totals terms change (bt [0.826, 24.26] -> [0.884, 16.00]; total_sd 17.0
 **Merged to main 2026-11-23** (owner approved). `experiments/results/baseline.json` re-run on the merged model
 (old one kept as `baseline_pre_exp006.json`); future experiments compare against total MAE 13.226.
 
+## EXP-009b — Does the model predict where the TOTAL moves from open to close? (2026-11-23) — PRE-REGISTERED
+
+**Why.** EXP-006 showed the model adds nothing beyond the CLOSING total. But Kalshi totals trade long before tip,
+when prices sit nearer the open. If the model predicts the open -> close move, early Kalshi prices could be beaten
+on closing value.
+
+**Exploration (2027 season only, Nov 1-22, 944 D-I games with DraftKings open + close; scripts in experiments/exp009b/).**
+- Lines move a lot (sd 3.2 pts; 40% move 3+), with no average drift (-0.06).
+- Model bias corrected using only earlier dates (expanding mean of open - model). After the first 3 days (n = 794):
+  slope of (close - open) on (model_adj - open) = 0.143, correlation 0.168.
+- When |model_adj - open| >= 3: lines that moved went toward the model 57% (over side, n = 258) and 61% (under, n = 89);
+  mean move toward the model ~0.5-0.7 pts.
+- Unadjusted model: slope 0.085 (se 0.027), 80% date-bootstrap range 0.034-0.151.
+
+### Pre-registration (committed before touching 2026)
+Test season: 2026 (2025-26), DraftKings opening and closing totals, model = the 2021-2026 holdout walk-forward with
+production params (lam_style = 12, TRAIN-only calibration), D-I games, excluding each season's first 3 days.
+Bias correction exactly as above (expanding mean of open - model over earlier dates only). Run ONCE.
+CONFIRMED only if both hold:
+1. Slope of (close - open) on (model_adj - open) > 0, with a 95% date-bootstrap interval (2,000 resamples) excluding 0.
+2. For |model_adj - open| >= 3, the share of moved lines (close != open) that moved toward the model is >= 0.55.
+Reported, not part of the decision: the mean move toward the model in that group, and (actual - close) in the same direction.
+Not a betting rule: whether ~0.5 pt of closing value survives Kalshi fees and spreads is EXP-009c.
+
