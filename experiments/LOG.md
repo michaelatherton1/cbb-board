@@ -53,3 +53,38 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-004 — What lineup/injury information is worth (2026-11-23) — RESEARCH ONLY: small lever, not built
+
+**Method (2012-2017 fit, 2018-2020 evaluation, holdout untouched).**
+- Each player gets a leak-free Game Score-per-minute value (prior games plus half of last season, shrunk toward
+  0.8x league).
+- A team's lineup delta = minutes-weighted value of tonight's available players minus its season-to-date average.
+- Margin adjustment = β·(Δ_home − Δ_away).
+- Oracle = who actually played (hindsight ceiling). Proxy = a player who appeared this season but missed the team's
+  previous game is "out".
+
+**2018-2020 margin MAE vs result (16,468 games).**
+
+| | 0-14 | 15-30 | 31-60 | 61+ | all |
+|---|---|---|---|---|---|
+| baseline | 9.582 | 9.161 | 9.029 | 8.667 | 8.915 |
+| oracle (who played) | 9.570 | 9.163 | 9.015 | 8.636 | 8.894 |
+| proxy (missed last game) | 9.578 | 9.165 | 9.029 | 8.651 | 8.907 |
+
+- Gains: oracle 0.021 (SE 0.005), proxy 0.0085 (SE 0.0037).
+- vs the closing line: baseline 1.677, proxy 1.664.
+- The proxy explains 1.7% of the variance in (market − model).
+- Even perfect lineup knowledge is far under the 0.1-pt bar. Game noise (SD ~11) swamps lineup effects in MAE.
+
+**The part that matters for betting (event study).**
+- When a team's top player (~32 mpg) is newly out, the team underperforms the model by 2.4-2.5 pts
+  (n=372 in 2018-20, 611 in 2012-17).
+- The closing line moved only 0.4-0.6 pts in those games.
+- About half of key-player absences are new (he played the previous game), so the proxy can't see them.
+- "Missed last game → misses this game" hits 62.5%, rising to 86% after 5+ straight absences.
+
+**Decision.** Don't build the lineup adjustment into the model: it's tiny for accuracy, and production would need
+daily player box downloads. Keep the value where it is concentrated: the daily news check (EXP-003) should look
+hardest for NEWLY absent top players. Those are the games where the market underreacts.
+Scratch code: /home/claude/scratch/exp004/.
