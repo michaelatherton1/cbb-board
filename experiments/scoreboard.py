@@ -6,6 +6,9 @@ Runs the existing walk-forward backtest (cbb/backtest.run: tuned on 2012-2020, s
     python experiments/scoreboard.py baseline                # production settings
     python experiments/scoreboard.py <label> --roster        # same, with the roster-continuity prior
     python experiments/scoreboard.py <label> --params FILE   # alternative Params json
+    python experiments/scoreboard.py <label> --post MOD:FUNC # post-process predictions (e.g. a market blend)
+                                                            # FUNC(pred_df) -> pred_df, applied after the
+                                                            # backtest (lines attached) and before scoring
 
 Headline metric: holdout margin MAE (lower is better), also split by season and by days into the season,
 plus the same games' DraftKings/ESPN closing-line MAE when lines_<season>.parquet exist (fetch_lines.py).
@@ -60,6 +63,7 @@ def main():
     ap.add_argument("label")
     ap.add_argument("--roster", action="store_true", help="use the roster-continuity preseason prior")
     ap.add_argument("--params", help="json file of Params overrides (default: data/best_params.json)")
+    ap.add_argument("--post", help="module:function that transforms the prediction frame before scoring")
     a = ap.parse_args()
     t0 = time.time()
     p = backtest.load_params()
@@ -72,8 +76,12 @@ def main():
         import roster as R
         roster = R.RosterPrior()
     pred, cal = backtest.run(p, roster=roster, label=a.label)
+    if a.post:
+        import importlib
+        mod, fn = a.post.split(":")
+        pred = getattr(importlib.import_module(mod), fn)(pred)
     te = pred[pred.season.isin(backtest.TEST)]
-    res = {"label": a.label, "roster": a.roster, "params": {f.name: getattr(p, f.name) for f in fields(Params)},
+    res = {"label": a.label, "roster": a.roster, "post": a.post, "params": {f.name: getattr(p, f.name) for f in fields(Params)},
            "seconds": round(time.time() - t0), "holdout": summarize(te)}
     OUT.mkdir(exist_ok=True)
     (OUT / f"{a.label}.json").write_text(json.dumps(res, indent=1))
