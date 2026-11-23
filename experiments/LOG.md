@@ -53,3 +53,39 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-005 — Kalshi spread/total ladders priced from the sportsbooks (2026-11-23) — NO EDGE FOUND (research tool; not proposed for main)
+
+**Question.** Kalshi lists a ladder of spread and total rungs per game ("wins by over X.5", "over X.5 points").
+Priced from the DraftKings/FanDuel/BetMGM main lines with a fitted distribution, are any rungs cheap after Kalshi's fee?
+
+**Distribution (Part A).** Fitted on closing lines, 2018-2020.
+- Spreads: split normal from the favorite's side, sigma depending on total, early season, neutral site and |spread| (capped at 30),
+  plus weights on whole-number margins (no ties; 1-point margins x0.86 vs a Normal).
+- Totals: split normal (x0.934 below the line, x1.019 above).
+- Season-out log loss improves over a plain Normal (spreads near zero margin 0.52366 -> 0.52242; totals 15+ from the line 0.21815 -> 0.21668).
+- Weakness: rungs 20+ points past the line are ~0.5pp too thin.
+- **Disclosure:** the agent first scored candidate shapes on 2021-2023 (per its original brief) before the "2012-2020 only" rule reached it.
+  It then re-selected on 2018-2020 alone (each season held out in turn) and the same shapes won. All shipped parameters are fitted on
+  2018-2020 only, but treat 2021-2023 as seen for this experiment.
+
+**Tool (Part B).** `cbb/ladder.py` (prices every rung from the median de-vigged book center; edge after fee; Kalshi's own implied
+center); `tests/test_ladder.py` (52 pass); research scripts in `experiments/exp005/`. No existing files changed.
+
+**Today's board (Part C, run 18:12Z, books pulled 17:30Z).**
+- 1,769 rungs in 30 games: edge after fee median -2.6c, 95th percentile +0.2c.
+- 8 rungs at >= 2c; 5 of those vanish against Kalshi's own center (the book pull was 47 min stale).
+- One rung at >= 3c with $10+ available: Illinois -30.5 vs Winthrop (ask 81c, fair 85.1%, +3.05c).
+  Not trusted: a 43-point favorite, 2 books a point apart, past the data range; only +1.9c against Kalshi's center.
+- Positive edges do not cluster in the tails.
+- Kalshi's mids are 0.3-0.6c cheaper on long-shot rungs: within model error and below trading cost (~1c half-spread + ~1.5c fee).
+
+**Verdict.** No evidence that Kalshi's ladders are mispriced versus the books after fees. One day is a snapshot, not a test.
+No skeptic review, because nothing is proposed for the dashboard or main.
+
+**To make it a real test (not started):**
+- Log every rung each run, with the book pull time, and only count rungs whose book pull is within ~15 min.
+- Grade against fair recomputed from the last pull before tip (closing value), not wins.
+- Compare our fair vs Kalshi's mid on results by distance from center.
+- `venues.py` doesn't store the NO-side size (= YES bid size); a one-line fix.
+
