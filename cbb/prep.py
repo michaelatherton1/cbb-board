@@ -27,17 +27,25 @@ def poss(fga, orb, tov, fta):
     return fga - orb + tov + 0.475 * fta
 
 
-def load_season(y):
-    box = pd.read_parquet(DATA / f"team_box_{y}.parquet")
-    sch = pd.read_parquet(DATA / f"sched_{y}.parquet")
+def conf_map(y, sch=None):
+    """Series team_id (int) -> conference id (int) for season y, from that season's schedule.
 
-    # D-I teams: anything with a conference id in the schedule (non-D-I opponents have none)
+    D-I teams: anything with a conference id in the schedule (non-D-I opponents have none).
+    """
+    if sch is None:
+        sch = pd.read_parquet(DATA / f"sched_{y}.parquet")
     cid = pd.concat([
         sch[["home_id", "home_conference_id"]].set_axis(["tid", "cid"], axis=1),
         sch[["away_id", "away_conference_id"]].set_axis(["tid", "cid"], axis=1)])
     cid = cid.dropna()
     cid["tid"] = cid.tid.astype(int)
-    conf = cid.drop_duplicates("tid", keep="last").set_index("tid").cid.astype(int)
+    return cid.drop_duplicates("tid", keep="last").set_index("tid").cid.astype(int)
+
+
+def load_season(y):
+    box = pd.read_parquet(DATA / f"team_box_{y}.parquet")
+    sch = pd.read_parquet(DATA / f"sched_{y}.parquet")
+    conf = conf_map(y, sch)
 
     box = box.copy()
     box["team_id"] = box.team_id.astype(int)

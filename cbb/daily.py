@@ -30,6 +30,24 @@ def american(p):
     return np.where(p >= 0.5, -100 * p / (1 - p), 100 * (1 - p) / p).round(0)
 
 
+def season_model(games, cur, asof, up, last, p, conf):
+    """Season `cur` ratings model as of `asof`: D-I games strictly before `asof`, and the same preseason
+    prior walk_forward (the backtest) uses - last season's final ratings pulled toward this season's
+    conference averages.
+
+    conf: Series team_id -> conference id for season `cur`, from its schedule (prep.conf_map). Every team in
+    it is rated, so the conference averages cover the same members as the backtest's full-season team set.
+    Returns (games used, SeasonModel).
+    """
+    now = games[(games.season == cur) & games.d1 & (games.date < pd.Timestamp(asof))]
+    teams = np.union1d(season_teams(now) if len(now) else np.array([], int),
+                       np.r_[up.home_id.to_numpy(), up.away_id.to_numpy()])
+    teams = np.union1d(teams, conf.index.to_numpy())
+    sm = SeasonModel(now if len(now) else games[games.season == cur].head(0), teams,
+                     make_prior(last, teams, p, conf=conf), p)
+    return now, sm
+
+
 def main(asof: date, days: int, refresh=True):
     cur = season_for(asof)
     seasons = list(range(max(2010, cur - 15), cur + 1))   # same prior chain as the backtest (from 2012)
@@ -43,13 +61,9 @@ def main(asof: date, days: int, refresh=True):
     _, finals = walk_forward(hist, [cur - 1], p, start=seasons[0])   # chain priors up to last season's final
     last = finals[cur - 1]
 
-    now = games[(games.season == cur) & games.d1 & (games.date < pd.Timestamp(asof))]
     up = prep.upcoming(cur, asof, asof + timedelta(days=days - 1))
     up = up[up.d1]
-    teams = np.union1d(season_teams(now) if len(now) else np.array([], int),
-                       np.r_[up.home_id.to_numpy(), up.away_id.to_numpy()])
-    sm = SeasonModel(now if len(now) else games[games.season == cur].head(0), teams,
-                     make_prior(last, teams, p), p)
+    now, sm = season_model(games, cur, asof, up, last, p, prep.conf_map(cur))
     r = sm.solve(pd.Timestamp(asof))
 
     poss, ph, pa = predict(r, sm.idx, up.home_id, up.away_id, up.neutral, up.conf_game)
