@@ -53,3 +53,26 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-006 — Totals: separate prior strength for team style/pace (2026-11-23) — PRE-REGISTERED
+
+**Question.** Totals use the same ridge penalty as margins (lam_eff on O and D). Is a team's scoring
+style (O+D)/2 more stable than its quality (O-D)/2, so that it should be pulled harder toward the prior?
+
+**Research (2012-2020 only).** Walk-forward grid over lam_style (4, 8, 12, 16, 20, 30) and a style carry-over.
+lam_style = 12 was best: total MAE 13.544 -> 13.508 (2012-17, calibration fitted on 2012-17) and
+13.526 -> 13.495 (2018-20). Margins are mathematically unchanged. The style carry-over added nothing and was dropped.
+
+**Change.** `cbb/model.py`: 2x2 penalty block per team (lam_eff on (O-D)/2, lam_style on (O+D)/2);
+`Params.lam_style` (None = old model, bit-identical). `data/best_params.json`: lam_style = 12.
+Tests: `tests/test_style_penalty.py`; `tests/test_prior_parity.py` now also checks totals. 25 tests pass.
+
+### Pre-registration (committed before the holdout run)
+Candidate: `lam_style = 12` (separate ridge penalty on the style/pace direction s=(O+D)/2; quality direction unchanged), chosen on 2012-2020 only.
+Run once: `python experiments/scoreboard.py exp006_lam_style12` vs `baseline.json` (2021-2026 holdout).
+KEEP only if all three hold:
+1. Holdout total MAE improves by >= 0.020 (baseline 13.278 -> <= 13.258).
+2. Total MAE improves in >= 4 of the 6 holdout seasons.
+3. Margin MAE is no worse by more than 0.005 (baseline 9.046 -> <= 9.051).
+Reported but not part of the decision: total MAE vs the closing total where a usable close exists (2021-23, 2026).
+Otherwise REJECT. No re-tuning after the holdout is seen.
