@@ -4,11 +4,13 @@ For each (season, date, team) we know which players have logged minutes so far a
 played last season. That lets the preseason prior follow the players: a team that returns its rotation
 keeps more of last year's rating; a team rebuilt through the portal inherits its transfers' old teams.
 """
+import os
 from pathlib import Path
 import numpy as np
 import pandas as pd
 
 DATA = Path(__file__).resolve().parent.parent / "data"
+CONF_ENV = "ROSTER_CONF_FEATURE"     # set to 1/true/yes/on to turn on RosterPrior's conference feature
 
 
 def player_minutes(season):
@@ -87,21 +89,78 @@ def features(comp_d, last, comp=("O", "D", "T")):
     return out
 
 
-class RosterPrior:
-    """Linear map from roster features -> season-final rating, refit each season on prior seasons only."""
+def conf_avg(last, conf):
+    """comp -> Series(team -> conference mean of last season's centered rating), over the teams in `conf`.
 
-    def __init__(self, first_fit_season=2012, snap_every=4, snap_until_day=60):
+    `conf` is the CURRENT season's team -> conference map (model.season_conf), so this is the same
+    conference average that model.make_prior mixes in with weight w_conf.
+    """
+    lc = _centered(last)
+    out = {}
+    for k, s in lc.items():
+        df = pd.DataFrame({"c": conf, "v": s.reindex(conf.index)})
+        out[k] = df.groupby("c").v.transform("mean")
+    return out
+
+
+def _env_flag(name):
+    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes", "on")
+
+
+class RosterPrior:
+    """Linear map from roster features -> season-final rating, refit each season on prior seasons only.
+
+    conf_feature (EXP-008): add a "conf" regressor = the current-season conference average of last
+    season's centered ratings (the quantity make_prior shrinks toward with w_conf). Teams without a
+    conference fall back to their own carry-over rating. Conference membership comes from the season's
+    schedule (known preseason, the same source walk_forward feeds make_prior); ratings are last season's
+    finals; roster minutes are games before the date, so the feature is leak-free.
+
+    conf_feature=None (the default) reads the ROSTER_CONF_FEATURE environment variable (1/true/yes/on
+    turns it on; unset or anything else is off), so e.g.
+        ROSTER_CONF_FEATURE=1 python experiments/scoreboard.py <label> --roster
+    selects it without code changes. Off reproduces the original RosterPrior exactly.
+
+    games: optional games frame for the conference map; loaded lazily from data/games.parquet if needed.
+    """
+
+    def __init__(self, first_fit_season=2012, snap_every=4, snap_until_day=60, conf_feature=None, games=None):
         self.first = first_fit_season
         self.snap_every, self.snap_until = snap_every, snap_until_day
+        self.conf_feature = _env_flag(CONF_ENV) if conf_feature is None else bool(conf_feature)
+        self.feats = FEATS + ["conf"] if self.conf_feature else list(FEATS)
         self.coef = {}          # season -> {comp: (coef array, intercept)}
+        self.fit_seasons = {}   # season -> training seasons used by fit_for (all < season)
         self.comp_cache = {}
         self.train_rows = {}    # season -> {comp: (X, y)}
+        self._games = games
+        self._conf = {}
 
     def comp(self, s):
         if s not in self.comp_cache:
             p = DATA / f"roster_comp_{s}.parquet"
             self.comp_cache[s] = pd.read_parquet(p) if p.exists() else None
         return self.comp_cache[s]
+
+    def season_conf(self, s):
+        """Team -> conference for season s, exactly as walk_forward builds it for make_prior."""
+        if s not in self._conf:
+            from model import season_conf
+            if self._games is None:
+                self._games = pd.read_parquet(DATA / "games.parquet")
+            g = self._games
+            self._conf[s] = season_conf(g[(g.season == s) & g.d1])
+        return self._conf[s]
+
+    def _features(self, s, comp_d, last):
+        f = features(comp_d, last)
+        if not self.conf_feature:
+            return f
+        ca = conf_avg(last, self.season_conf(s))
+        for k in f:
+            # teams without a conference (shouldn't happen for D-I) fall back to their own carry-over
+            f[k] = f[k].assign(conf=ca[k].reindex(f[k].index).fillna(f[k]["carry"]))[self.feats]
+        return f
 
     def add_training_season(self, s, last, final):
         """Store (features, target) snapshots for season s once its final ratings are known."""
@@ -114,7 +173,7 @@ class RosterPrior:
         fc = _centered(final)
         rows = {k: [] for k in "ODT"}
         for d in snaps:
-            f = features(c[c.date == d], last)
+            f = self._features(s, c[c.date == d], last)
             for k in "ODT":
                 x = f[k].dropna()
                 y = fc[k].reindex(x.index)
@@ -125,9 +184,10 @@ class RosterPrior:
 
     def fit_for(self, s):
         """Fit coefficients using every stored season < s."""
-        prev = [t for t in self.train_rows if self.first <= t < s]
+        prev = sorted(t for t in self.train_rows if self.first <= t < s)
         if len(prev) < 2:
             return None
+        self.fit_seasons[s] = prev
         res = {}
         for k in "ODT":
             X = np.vstack([self.train_rows[t][k][0] for t in prev])
@@ -150,7 +210,7 @@ class RosterPrior:
             if prior_dates.empty:
                 return None
             cd = c[c.date == prior_dates.max()]
-        f = features(cd, last)
+        f = self._features(s, cd, last)
         out = {}
         for k in "ODT":
             x = f[k].dropna()

@@ -53,3 +53,17 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-008 — Roster-continuity prior with a conference term, transfer-portal era (2026-11-23)
+
+**Pre-registration (committed before the holdout run).**
+- **Candidate:** `RosterPrior(conf_feature=True)` (env `ROSTER_CONF_FEATURE=1`) with production params. It is the
+  existing roster prior plus the current-season conference average of last season's ratings.
+- **2012-2020 evidence:** days 0-30 margin MAE 9.358 vs 9.376 (−0.018 ± 0.016). Not significant; the hypothesis is
+  that roster turnover matters more since the portal (2021+).
+- **Single holdout run:** `ROSTER_CONF_FEATURE=1 python experiments/scoreboard.py exp008_roster_conf --roster`.
+- **KEEP only if all hold:**
+  1. Holdout days 0-30 margin MAE (2021-2026) improves vs baseline by >= 0.03.
+  2. Days 0-30 improves in >= 4 of 6 holdout seasons.
+  3. Overall holdout margin MAE is not worse than baseline (9.046).
+- Otherwise REJECT. No re-tuning after the run.
