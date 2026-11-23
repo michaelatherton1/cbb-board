@@ -67,3 +67,15 @@ gap. Next candidates:
   2. Days 0-30 improves in >= 4 of 6 holdout seasons.
   3. Overall holdout margin MAE is not worse than baseline (9.046).
 - Otherwise REJECT. No re-tuning after the run.
+
+**Holdout result (single run, `exp008_roster_conf`).**
+- Overall margin MAE: 9.0419 vs 9.0457 (−0.004).
+- Days 0-30 (8,040 games): −0.0139 ± 0.0235 (95%, game-level).
+- By season (days 0-30): 2021 +0.021, 2022 −0.032, 2023 −0.015, 2024 −0.022, 2025 −0.029, 2026 +0.005. That's 4 of 6
+  improved.
+- Total MAE: 13.284 vs 13.278.
+
+**Verdict: REJECT.** Criterion 1 fails (−0.014, short of the pre-registered −0.03). Criteria 2 and 3 pass. The
+portal-era seasons do lean the right way (2022-25 all −0.015 to −0.032), but the effect is small and not
+significant. No re-tuning. The code stays on this branch, off by default, in case a richer roster model (player
+value rather than minutes share) is tried later. See EXP-004.
