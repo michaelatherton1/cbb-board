@@ -1,0 +1,22 @@
+{
+ "dates": {
+  "2026-11-23": {
+   "fetched": "2026-11-23T17:30:19+00:00",
+   "cost": 562,
+   "quotes": 498
+  }
+ },
+ "spent_utc": {
+  "2026-11-23": 562
+ },
+ "usage": {
+  "X-Datapoints": "562",
+  "X-Datapoints-Remaining": "18294",
+  "X-Datapoints-Monthly-Remaining": "198294",
+  "X-Datapoints-Reset": "2026-11-24T00:00:00Z",
+  "X-Bookmakers": "betmgm,fanduel,draftkings",
+  "X-Data-Delay-Seconds": "300",
+  "X-Tier": "free",
+  "day": "2026-11-23"
+ }
+}
