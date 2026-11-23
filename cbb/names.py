@@ -36,6 +36,12 @@ ALIASES = {
     "csu bakersfield": "cal state bakersfield", "cal baptist": "california baptist",
     "uc santa barbara": "uc santa barbara", "ucsb": "uc santa barbara", "ucsd": "uc san diego",
     "sam houston state": "sam houston", "gw": "george washington", "gwu": "george washington",
+    # short forms seen on Polymarket US / Kalshi
+    "uca": "central arkansas", "nm state": "new mexico state", "eiu": "eastern illinois",
+    "ualbany": "albany", "at albany": "albany", "albany ny": "albany", "unf": "north florida",
+    "ndsu": "north dakota state", "uni": "northern iowa", "unco": "northern colorado",
+    "uiw": "incarnate word", "ewu": "eastern washington", "fgcu": "florida gulf coast",
+    "uncw": "unc wilmington", "lmu": "loyola marymount", "csub": "cal state bakersfield",
 }
 
 

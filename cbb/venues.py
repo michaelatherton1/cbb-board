@@ -52,9 +52,13 @@ def _ok(ask):
 
 def split_matchup(title):
     """'Cal Poly vs Montana St.: Spread' -> ('Cal Poly', 'Montana St.')."""
-    t = re.split(r"\s*[:—–]\s*(?:spread|total|moneyline|winner|game|full game).*$", title, flags=re.I)[0]
-    t = re.sub(r"\s*[—–-]\s*(moneyline|spread|total|point spread|total points).*$", "", t, flags=re.I)
-    parts = re.split(r"\s+(?:vs\.?|v\.?|at|@)\s+", t, maxsplit=1, flags=re.I)
+    # drop a market suffix: ': Spread', ': Point Total', ' — Moneyline', ...
+    t = re.split(r"\s*[:—–]\s*[^:—–]*\b(?:spread|total|moneyline|winner|game)\b.*$", title, flags=re.I)[0]
+    t = re.sub(r"\s*[—–-]\s*(moneyline|spread|total|point spread|total points|point total).*$", "", t, flags=re.I)
+    # 'vs' first, so 'University at Albany vs Syracuse' isn't split at 'at'; 'at' / '@' only if there's no 'vs'
+    parts = re.split(r"\s+(?:vs\.?|v\.?)\s+", t, maxsplit=1, flags=re.I)
+    if len(parts) != 2:
+        parts = re.split(r"\s+(?:at|@)\s+", t, maxsplit=1, flags=re.I)
     return (parts[0].strip(), parts[1].strip()) if len(parts) == 2 else (None, None)
 
 
