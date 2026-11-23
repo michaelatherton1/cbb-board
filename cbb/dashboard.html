@@ -133,7 +133,7 @@ tr.detail .card{margin:6px 0 0}
       <label class="sub" style="white-space:nowrap"><input type="checkbox" id="showManual" checked> DK / FD / Fanatics</label>
     </div>
     <div class="gridwrap"><table class="odds" id="oddsTbl"></table></div>
-    <p class="note"><span class="cell best" style="min-width:0;padding:1px 6px">Green</span> = best price for that side across the apps (same line: cheapest; different lines: compared with the model's chance of covering). ▲ = at least 3¢ better than the model's price. Prices include estimated fees. Spreads and totals show each app's main line; <b>Best</b> also searches alternate lines. Tap a team for every price; tap <b>+</b> to add a price from an app without a feed. ⚖ = arbitrage available (locked profit per $1), ▲ = model edge, N = neutral site.</p>
+    <p class="note"><span class="cell best" style="min-width:0;padding:1px 6px">Green</span> = best price for that side across the apps (same line: cheapest; different lines: compared with the model's chance of covering). ▲ = at least 3¢ better than the model's price. Prices include estimated fees. Spreads and totals show each app's main line (the one priced nearest even), and <b>Best</b> repeats the green one. Tap a team for every price, including alternate lines; tap <b>+</b> to add a price from an app without a feed. ⚖ = arbitrage available (locked profit per $1), ▲ = model edge, N = neutral site.</p>
   </section>
 
   <section id="p-arbs" role="tabpanel" hidden>
@@ -310,7 +310,7 @@ function gameCard(g){
     `<tr><td>${esc(pick(g,q))}</td><td>${esc(q.venue)}${q.manual?`<span class="mine">you</span> <button class="x" data-del="${q.id}" aria-label="Delete">✕</button>`:""}</td>
      <td class="n">${cents(q.ask)}</td><td class="n">${q.fee?cents(q.fee):"–"}</td><td class="n">${Math.round(q.model_prob*100)}%</td><td class="n ${q.edge>=0?"pos":"neg"}">${edgeTxt(q.edge)}</td></tr>`).join("");
   return `<article class="card"><div class="ghead"><span class="mu">${esc(g.away)} @ ${esc(g.home)}</span>${badges}</div><div class="model">${model}</div>
-    ${rows?`<div class="scroll"><table><thead><tr><th>Best line</th><th class="n">Price</th><th>Where</th><th class="n">Model</th><th class="n">Edge</th></tr></thead><tbody>${rows}</tbody></table></div>`:""}
+    ${rows?`<div class="scroll"><table><thead><tr><th>Top model edge</th><th class="n">Price</th><th>Where</th><th class="n">Model</th><th class="n">Edge</th></tr></thead><tbody>${rows}</tbody></table></div>`:""}
     ${qs.length?`<details><summary>All ${qs.length} prices</summary><div class="scroll"><table><thead><tr><th>Outcome</th><th>Venue</th><th class="n">Price</th><th class="n">Fee</th><th class="n">Model</th><th class="n">Edge</th></tr></thead><tbody>${all}</tbody></table></div></details>`:""}
     <button class="add" data-add="${g.game_id}">+ Add a DraftKings / FanDuel / Fanatics price</button></article>`;}
 
@@ -371,10 +371,9 @@ function gameRows(g,cols){
     const mq=qs.filter(q=>q.market===m);
     for(const v of cols) byVenue[v][m]=venueOffer(mq.filter(q=>q.venue===v),m);
     for(let r=0;r<2;r++){
-      const side=ROWSIDE[m][r];
-      bestCol[m+r]=bestOf(mq.filter(q=>q.side===side));
+      // Best = the green one: picked from each app's main line only (searching Kalshi's alt-line ladder picked long shots)
       const shown=cols.map(v=>byVenue[v][m][r]).filter(Boolean);
-      hl[m+r]=bestOf(shown);}}
+      hl[m+r]=bestOf(shown); bestCol[m+r]=hl[m+r];}}
   const top=qs.reduce((m,q)=>(q.edge??-9)>(m?m.edge:-9)?q:m,null);
   const badges=(arbs.length?`<span class="badge b-arb" title="Arbitrage available">⚖ ${(arbs[0].profit*100).toFixed(1)}¢</span>`:"")+
     (top&&top.edge>=P.min_edge?`<span class="badge b-edge" title="Model edge of 3¢ or more">▲</span>`:"")+(g.neutral?`<span class="badge b-none" title="Neutral site">N</span>`:"");
