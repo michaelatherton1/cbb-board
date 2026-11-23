@@ -53,3 +53,44 @@ gap. Next candidates:
    need a pre-registered single holdout run).
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
+
+## EXP-002 — Blend the model with the opening line (2026-11-23) — REJECTED at research stage (holdout not spent)
+
+**Idea.** Early in the season the market knows things the model doesn't. Predict
+`w * model + (1 - w) * (-opening spread)` (and the same for totals), with w chosen before any holdout run.
+
+**Scorecard change (made before any EXP-002 result existed).** `experiments/scoreboard.py --post module:function`
+applies a post-backtest transform before scoring.
+
+**Data problem found by the researcher.**
+- The ESPN/hoopR mirror has no opening lines for 2013-2023. Coverage: 0% in every season.
+- Only 2026 (DraftKings, 99%) and the live 2027 season (944/944) have opens.
+- Totals for 2013-2017 are junk (mean |total - close| 43-81 pts).
+- 2-4% of older neutral-site spreads are sign-flipped.
+- The researcher's w=0.5 came from simulated opening lines, not real ones.
+- Leak found: `backtest.attach_lines` sets the neutral-site *opening* spread's sign from the *closing* moneyline.
+  Anything blending with the open must read raw `spread_open` from `lines_<season>.parquet`.
+
+**Lead measurement on real opens (2027, never part of the holdout; raw opens; pre-game model lines from the Record tab).**
+
+| w (model weight) | 0 (open only) | 0.1 | 0.25 | 0.5 | 1 (model only) |
+|---|---|---|---|---|---|
+| Margin MAE vs result, all 944 | 9.753 | 9.766 | 9.811 | 9.935 | 10.348 |
+| Non-neutral only (828) | 9.742 | 9.765 | 9.825 | 9.979 | 10.447 |
+| Days 0-7 (329) | 9.229 | 9.275 | 9.358 | 9.567 | 10.149 |
+| Days 8-22 (615) | 10.033 | 10.029 | 10.053 | 10.131 | 10.455 |
+
+- Best w: 0.00 vs results and 0.00 vs the close.
+- Date-bootstrap: median 0.00, 80% range 0.00-0.05.
+- Totals: w=0.25 gives 13.247 vs 13.251 for the open alone (noise).
+- The closing line is better still: 9.570.
+
+**Decision.** This season the model adds nothing to DraftKings' opening line, so a blend would just be the line. Not
+shipped. The 2026 holdout was not run, so it stays unspent for a stronger candidate.
+
+**Implications.**
+- The dashboard's model-vs-price edges are mostly model error this early in the season. A no-vig sportsbook
+  consensus is the better fair price for judging Kalshi/Polymarket/Novig prices (the local scanner already
+  does this).
+- Revisit after ~day 45 of 2027. The researcher's 2018-20 close-blend diagnostic and the days 8-22 hint
+  (w=0.1 ties) suggest the model's weight may rise as the season goes on.
