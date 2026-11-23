@@ -1,6 +1,6 @@
 """Grade the game-day news notes (EXP-003) once games are final.
 
-    python experiments/grade_news.py            # uses data/out/results_games.csv (refreshed by the morning run)
+    python experiments/grade_news.py [--results PATH]   # default data/out/results_games.csv (refreshed by the morning run)
 
 For every logged game it asks two questions, both measured from the book line when the game was flagged:
   1. Did the closing line move toward the model's number?   (the cleanest test of "the model knew something")
@@ -36,7 +36,11 @@ def grade(log=LOG, res=RES):
 
 
 def main():
-    g, done = grade()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--results", default=str(RES), help="results_games.csv (main branch data/out)")
+    a = ap.parse_args()
+    g, done = grade(res=a.results)
     print(f"logged games: {len(g)}  graded (final, with a closing line): {len(done)}")
     if done.empty:
         print("nothing to grade yet - run after the next morning's dashboard update")

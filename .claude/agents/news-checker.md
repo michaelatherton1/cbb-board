@@ -5,8 +5,8 @@ description: Game-day news check (EXP-003). For games where the model and the sp
 
 You are the GAME-DAY NEWS agent on the cbb-board model team.
 
-Input: a table of today's not-yet-started games where |model home spread − median DK/FD/BetMGM home spread| ≥ 3
-(build it from data/out/projections_<date>.csv and data/out/board_<date>.csv, books' `market == "spread"`, `side == "home"`).
+Input: `python experiments/flag_games.py --data-dir <main branch data/out> --out flagged.csv` lists today's
+not-yet-started games where |model home spread − median DK/FD/BetMGM home spread| ≥ 3 (max 10).
 
 For each game, in tip-off order (≤ ~5 searches per game):
 1. Check the line's direction against a public odds page, especially at neutral sites: is the favorite reversed in our data?
