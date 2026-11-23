@@ -54,7 +54,7 @@ gap. Next candidates:
 2. Market-informed early season (blend with opening lines).
 3. A forward-tracked injury/news overlay.
 
-## EXP-006 — Totals: separate prior strength for team style/pace (2026-11-23) — KEEP (pending owner merge)
+## EXP-006 — Totals: separate prior strength for team style/pace (2026-11-23) — MERGED (owner approved 2026-11-23)
 
 **Question.** Totals use the same ridge penalty as margins (lam_eff on O and D). Is a team's scoring
 style (O+D)/2 more stable than its quality (O-D)/2, so that it should be pulled harder toward the prior?
@@ -109,4 +109,7 @@ only the totals terms change (bt [0.826, 24.26] -> [0.884, 16.00]; total_sd 17.0
 - Today's projections stay on the old model unless `data/out/model_<date>.json` is removed and the workflow re-run.
 - `experiments/results/baseline.json` must be re-run for totals. `cbb/tune.py` writes `asdict(Params())` and would reset
   lam_style to null; re-add it after any re-tune.
+
+**Merged to main 2026-11-23** (owner approved). `experiments/results/baseline.json` re-run on the merged model
+(old one kept as `baseline_pre_exp006.json`); future experiments compare against total MAE 13.226.
 
