@@ -52,3 +52,5 @@ def test_daily_prior_matches_walk_forward(replay, day):
     _, ph, pa = predict(r, sm.idx, up.home_id, up.away_id, up.neutral, up.conf_game)
     want = replay["ref"].loc[up.game_id.to_numpy(), "raw_margin"].to_numpy()
     np.testing.assert_allclose(ph - pa, want, rtol=0, atol=1e-9)
+    want_t = replay["ref"].loc[up.game_id.to_numpy(), "raw_total"].to_numpy()   # totals too (EXP-006 lam_style)
+    np.testing.assert_allclose(ph + pa, want_t, rtol=0, atol=1e-9)

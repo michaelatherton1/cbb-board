@@ -7,6 +7,10 @@ Tempo model (one row per game):
 
 Each day's fit is a weighted ridge regression whose penalty pulls every team toward a preseason
 prior = r * (last season's final rating). Recency weights decay with a half-life in days.
+
+The O/D penalty is a 2x2 block per team: strength lam_eff on quality q = (O - D)/2 (drives margins) and
+lam_style on style s = (O + D)/2 (drives totals only). lam_style = None (or = lam_eff) is the plain
+diagonal ridge lam_eff * ((O - O0)^2 + (D - D0)^2). Margin predictions do not depend on lam_style.
 """
 from dataclasses import dataclass, field
 import numpy as np
@@ -18,7 +22,8 @@ from scipy.linalg import cho_factor, cho_solve
 @dataclass
 class Params:
     half_life: float = 60.0      # days; recency weighting of games inside a season
-    lam_eff: float = 6.0         # prior strength for O/D, in pseudo-games
+    lam_eff: float = 6.0         # prior strength for O/D, in pseudo-games (on quality (O-D)/2 if lam_style is set)
+    lam_style: float | None = None  # prior strength on style (O+D)/2 (totals only); None -> lam_eff (plain ridge)
     lam_tempo: float = 6.0       # prior strength for tempo, in pseudo-games
     r_eff: float = 0.65          # carry-over of last season's O/D deviation into this season's prior
     r_tempo: float = 0.75        # carry-over of last season's tempo deviation
@@ -101,7 +106,13 @@ class SeasonModel:
         # priors
         self.prior = prior
         self.b0 = np.r_[prior["mu"], prior["hca"], prior["hca_nc"], prior["O"], prior["D"]]
-        self.pen = np.r_[p.lam_mu, p.lam_hca, p.lam_hca, np.full(n, p.lam_eff), np.full(n, p.lam_eff)]
+        # O/D penalty, a 2x2 block per team: lam_eff on (O-D)/2, lam_style on (O+D)/2.
+        #   P[O_i,O_i] = P[D_i,D_i] = (lam_eff + lam_style)/2,  P[O_i,D_i] = P[D_i,O_i] = (lam_style - lam_eff)/2
+        # self.pen is P's diagonal; self.couple = (O cols, D cols, off-diagonal value), None when it is 0.
+        lam_s = p.lam_eff if p.lam_style is None else p.lam_style
+        a, c = (p.lam_eff + lam_s) / 2, (lam_s - p.lam_eff) / 2
+        self.pen = np.r_[p.lam_mu, p.lam_hca, p.lam_hca, np.full(n, a), np.full(n, a)]
+        self.couple = (3 + np.arange(n), 3 + n + np.arange(n), c) if c != 0 else None
         self.b0t = np.r_[prior["mu_t"], prior["T"]]
         self.pent = np.r_[p.lam_mu, np.full(n, p.lam_tempo)]
         self.hi, self.ai = hi, ai
@@ -133,20 +144,30 @@ class SeasonModel:
             wt = 0.5 ** ((cut - self.day[selt]) / p.half_life)
         else:
             w, wt = np.ones(sel.sum()), np.ones(selt.sum())
-        b = self._ridge(self.X[sel], self.y[sel], w, b0, self.pen)
+        b = self._ridge(self.X[sel], self.y[sel], w, b0, self.pen, self.couple)
         bt = self._ridge(self.Xt[selt], self.yt[selt], wt, b0t, self.pent)
         n = self.n
         ng = np.bincount(np.r_[self.hi[selt], self.ai[selt]], minlength=n)
         return Ratings(self.teams, b[0], b[1], b[3:3 + n], b[3 + n:], bt[0], bt[1:], ng, hca_nc=b[2])
 
     @staticmethod
-    def _ridge(X, y, w, b0, pen):
+    def _ridge(X, y, w, b0, pen, couple=None):
+        """argmin sum w (y - Xb)^2 + (b - b0)' P (b - b0), P = diag(pen) + symmetric pairs from `couple`.
+
+        couple: optional (i, j, c) adding c at P[i, j] and P[j, i] (index arrays i, j; scalar c).
+        """
         if X.shape[0] == 0:
             return b0.copy()
         Xw = X.multiply(w[:, None]).tocsr()
         A = (X.T @ Xw).toarray()
         A[np.diag_indices_from(A)] += pen
         rhs = Xw.T @ y + pen * b0
+        if couple is not None:
+            i, j, c = couple
+            A[i, j] += c
+            A[j, i] += c
+            rhs[i] += c * b0[j]
+            rhs[j] += c * b0[i]
         return cho_solve(cho_factor(A), rhs)
 
 
