@@ -1,2 +1,2 @@
 game_id,date,tipoff,away,home,market,leg1,leg1_venue,leg1_ask,leg1_fee,leg2,leg2_venue,leg2_ask,leg2_fee,total_cost,locked_profit,roi,middle,same_venue
-401921029,2026-11-23,2026-11-23 19:00:00-05:00,Georgia Southern,Northern Kentucky,ml,Northern Kentucky ML,Kalshi,0.72,0.0141,Georgia Southern ML,Polymarket US,0.2,0.0152,0.9493,0.0507,0.0534,,False
+401921208,2026-11-23,2026-11-23 20:00:00-05:00,Stephen F. Austin,Utah Valley,ml,Utah Valley ML,Kalshi,0.11,0.0069,Stephen F. Austin ML,Polymarket US,0.85,0.0121,0.979,0.021,0.0215,,False

@@ -1,9 +1,9 @@
 {
  "dates": {
   "2026-11-23": {
-   "fetched": "2026-11-23T23:57:57+00:00",
-   "cost": 278,
-   "quotes": 244
+   "fetched": "2026-11-24T03:06:16+00:00",
+   "cost": 40,
+   "quotes": 36
   },
   "2026-11-24": {
    "fetched": "2026-11-23T23:00:49+00:00",
@@ -12,16 +12,17 @@
   }
  },
  "spent_utc": {
-  "2026-11-23": 1414
+  "2026-11-23": 1414,
+  "2026-11-24": 40
  },
  "usage": {
-  "X-Datapoints": "278",
-  "X-Datapoints-Remaining": "16884",
-  "X-Datapoints-Monthly-Remaining": "196884",
-  "X-Datapoints-Reset": "2026-11-24T00:00:00Z",
+  "X-Datapoints": "40",
+  "X-Datapoints-Remaining": "19960",
+  "X-Datapoints-Monthly-Remaining": "196844",
+  "X-Datapoints-Reset": "2026-11-25T00:00:00Z",
   "X-Bookmakers": "betmgm,fanduel,draftkings",
   "X-Data-Delay-Seconds": "300",
   "X-Tier": "free",
-  "day": "2026-11-23"
+  "day": "2026-11-24"
  }
 }
