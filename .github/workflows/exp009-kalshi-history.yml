@@ -2,7 +2,9 @@ name: EXP-009a Kalshi totals history
 
 # Data collection for EXP-009a: Kalshi's history for college basketball TOTALS markets (series KXNCAAMBTOTAL).
 # Runs only on pushes to the experiment branch that touch the fetcher or this file. Public Kalshi endpoints, no secrets.
-# The data comes back as a workflow artifact (30 days); nothing is committed.
+# plan: series/fee/cutoff + every event and market, once. shard (matrix): trades + candles for 1/N of the events
+# (crc32 of event_ticker), <= 8 req/s each. Results are committed to the orphan data branch
+# agents/exp-009-kalshi-data (kalshi_totals/meta/ and kalshi_totals/<season>/shard_<k>/); nothing goes to main.
 on:
   push:
     branches: [agents/exp-009-kalshi-totals]
@@ -17,14 +19,16 @@ concurrency:
   group: exp009-kalshi-history
   cancel-in-progress: true        # a newer push replaces a running pull, so only one pull hits Kalshi at a time
 
+env:
+  DATA_BRANCH: agents/exp-009-kalshi-data
+  N_SHARDS: "4"                   # must match the matrix below
+
 jobs:
-  fetch:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
-    env:
-      OUT: exp009_out
-      # stop starting new requests after 70 min (leaves time to merge the files and upload within the 90-min timeout)
-      FETCH_ARGS: --budget-min 70 --rps 9 --workers 4
+    timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,15 +37,91 @@ jobs:
       - run: pip install requests pandas pyarrow
       - name: Offline self-test (mocked API)
         run: python experiments/exp009/kalshi_history.py --self-test
-      - name: Fetch Kalshi history
-        run: python experiments/exp009/kalshi_history.py --out "$OUT" $FETCH_ARGS
-      - name: List output
-        if: always()
-        run: ls -la "$OUT" || true
+      - name: Plan (meta + all events and markets)
+        run: python experiments/exp009/kalshi_history.py --mode plan --n-shards "$N_SHARDS" --data-out data_out --plan plan_out
       - uses: actions/upload-artifact@v4
+        with:
+          name: exp009-plan
+          path: plan_out
+          retention-days: 5
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DATA_BRANCH }}
+          path: data_repo
+          fetch-depth: 0
+      - name: Commit meta to the data branch
+        run: |
+          set -euo pipefail
+          cd data_repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          rm -rf kalshi_totals/meta && mkdir -p kalshi_totals && cp -r ../data_out/kalshi_totals/meta kalshi_totals/meta
+          git add -A kalshi_totals
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          printf '%s\n\n%s\n%s\n' "EXP-009a data: meta (run ${GITHUB_RUN_ID})" \
+            "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" \
+            "Claude-Session: https://claude.ai/code/session_01RU8obEdefG53hYfVAzhD1q" > "$RUNNER_TEMP/msg"
+          git commit -q -F "$RUNNER_TEMP/msg"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if git pull -q --rebase origin "$DATA_BRANCH" && git push -q origin "HEAD:$DATA_BRANCH"; then echo "pushed"; exit 0; fi
+            sleep $((RANDOM % 30 + 10))
+          done
+          exit 1
+
+  shard:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas pyarrow
+      - uses: actions/download-artifact@v4
+        with:
+          name: exp009-plan
+          path: plan_out
+      - name: Fetch shard ${{ matrix.shard }} (trades, 1h candles, 1m candles)
+        # stop starting new requests after 290 min: leaves time to write and push within the 330-min timeout
+        run: >
+          python experiments/exp009/kalshi_history.py --mode shard --shard ${{ matrix.shard }} --n-shards "$N_SHARDS"
+          --plan plan_out --data-out data_out --rps 8 --workers 8 --budget-min 290
+      - uses: actions/checkout@v4
         if: always()
         with:
-          name: exp009-kalshi-history
-          path: ${{ env.OUT }}
-          retention-days: 30
-          if-no-files-found: warn
+          ref: ${{ env.DATA_BRANCH }}
+          path: data_repo
+          fetch-depth: 0
+      - name: Commit shard ${{ matrix.shard }} to the data branch
+        if: always()
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          ls -d data_out/kalshi_totals/*/shard_"$SHARD" >/dev/null 2>&1 || { echo "no output to commit"; exit 0; }
+          du -ah data_out/kalshi_totals | sort -h | tail -15
+          cd data_repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          for d in ../data_out/kalshi_totals/*/shard_"$SHARD"; do
+            rel="${d#../data_out/}"
+            rm -rf "$rel" && mkdir -p "$(dirname "$rel")" && cp -r "$d" "$rel"
+          done
+          git add -A kalshi_totals
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          printf '%s\n\n%s\n%s\n' "EXP-009a data: shard ${SHARD}/${N_SHARDS} (run ${GITHUB_RUN_ID})" \
+            "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" \
+            "Claude-Session: https://claude.ai/code/session_01RU8obEdefG53hYfVAzhD1q" > "$RUNNER_TEMP/msg"
+          git commit -q -F "$RUNNER_TEMP/msg"
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if git pull -q --rebase origin "$DATA_BRANCH" && git push -q origin "HEAD:$DATA_BRANCH"; then echo "pushed"; exit 0; fi
+            sleep $((RANDOM % 30 + 10))
+          done
+          exit 1
