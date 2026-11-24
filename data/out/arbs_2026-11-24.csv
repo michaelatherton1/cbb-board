@@ -1,2 +1,2 @@
 game_id,date,tipoff,away,home,market,leg1,leg1_venue,leg1_ask,leg1_fee,leg2,leg2_venue,leg2_ask,leg2_fee,total_cost,locked_profit,roi,middle,same_venue
-401915941,2026-11-24,2026-11-24 15:00:00-05:00,Miami,TCU,spread,TCU -16.5,Kalshi,0.01,0.0007,Miami +19.5,Kalshi,0.98,0.0014,0.9921,0.0079,0.008,both win if TCU wins by 17–19,True
+401925014,2026-11-24,2026-11-24 18:30:00-05:00,Robert Morris,Lamar,ml,Lamar ML,Polymarket US,0.53,0.0237,Robert Morris ML,Kalshi,0.39,0.0167,0.9604,0.0396,0.0412,,False
