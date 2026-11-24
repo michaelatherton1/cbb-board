@@ -21,21 +21,22 @@ Kalshi,American International vs Rhode Island,2026-11-25,American International,
 Kalshi,Vermont State-Randolph vs FDU,2026-11-25,Vermont State-Randolph,FDU
 Kalshi,Penn State-Abington vs Saint Joseph's,2026-11-25,Penn State-Abington,Saint Joseph's
 Kalshi,Mercy vs Fordham,2026-11-25,Mercy,Fordham
+Kalshi,VCU vs Colorado St.,2026-11-24,VCU,Colorado St.
 Kalshi,Clemson vs Washington,2026-11-24,Clemson,Washington
 Kalshi,Emerson vs Quinnipiac,2026-11-24,Emerson,Quinnipiac
+Kalshi,Providence vs Arizona,2026-11-24,Providence,Arizona
 Kalshi,Bloomsburg vs Wagner,2026-11-24,Bloomsburg,Wagner
 Kalshi,Penn State-Berks vs Navy,2026-11-24,Penn State-Berks,Navy
 Kalshi,Ole Miss vs BYU,2026-11-24,Ole Miss,BYU
 Kalshi,Vermont State-Randolph vs Stonehill,2026-11-24,Vermont State-Randolph,Stonehill
-Kalshi,UC San Diego vs San Jose St.,2026-11-24,UC San Diego,San Jose St.
-Kalshi,Colorado St. vs Arizona,2026-11-23,Colorado St.,Arizona
+Kalshi,VCU vs Colorado St.: Spread,2026-11-24,VCU,Colorado St.
+Kalshi,Clemson vs Washington: Spread,2026-11-24,Clemson,Washington
+Kalshi,Providence vs Arizona: Spread,2026-11-24,Providence,Arizona
 Kalshi,Ole Miss vs BYU: Spread,2026-11-24,Ole Miss,BYU
-Kalshi,UC San Diego vs San Jose St.: Spread,2026-11-24,UC San Diego,San Jose St.
-Kalshi,Colorado St. vs Arizona: Spread,2026-11-23,Colorado St.,Arizona
+Kalshi,VCU vs Colorado St.: Point Total,2026-11-24,VCU,Colorado St.
 Kalshi,Clemson vs Washington: Point Total,2026-11-24,Clemson,Washington
+Kalshi,Providence vs Arizona: Point Total,2026-11-24,Providence,Arizona
 Kalshi,Ole Miss vs BYU: Point Total,2026-11-24,Ole Miss,BYU
-Kalshi,UC San Diego vs San Jose St.: Point Total,2026-11-24,UC San Diego,San Jose St.
-Kalshi,Colorado St. vs Arizona: Point Total,2026-11-23,Colorado St.,Arizona
 Robinhood,Omaha vs Pacific,2026-11-26,Omaha,Pacific
 Robinhood,Jacksonville St. vs UC Davis,2026-11-26,Jacksonville St.,UC Davis
 Robinhood,SMU vs LSU,2026-11-26,SMU,LSU
@@ -58,22 +59,22 @@ Robinhood,American International vs Rhode Island,2026-11-25,American Internation
 Robinhood,Vermont State-Randolph vs FDU,2026-11-25,Vermont State-Randolph,FDU
 Robinhood,Penn State-Abington vs Saint Joseph's,2026-11-25,Penn State-Abington,Saint Joseph's
 Robinhood,Mercy vs Fordham,2026-11-25,Mercy,Fordham
+Robinhood,VCU vs Colorado St.,2026-11-24,VCU,Colorado St.
 Robinhood,Clemson vs Washington,2026-11-24,Clemson,Washington
 Robinhood,Emerson vs Quinnipiac,2026-11-24,Emerson,Quinnipiac
+Robinhood,Providence vs Arizona,2026-11-24,Providence,Arizona
 Robinhood,Bloomsburg vs Wagner,2026-11-24,Bloomsburg,Wagner
 Robinhood,Penn State-Berks vs Navy,2026-11-24,Penn State-Berks,Navy
 Robinhood,Ole Miss vs BYU,2026-11-24,Ole Miss,BYU
 Robinhood,Vermont State-Randolph vs Stonehill,2026-11-24,Vermont State-Randolph,Stonehill
-Robinhood,UC San Diego vs San Jose St.,2026-11-24,UC San Diego,San Jose St.
-Robinhood,Colorado St. vs Arizona,2026-11-23,Colorado St.,Arizona
+Robinhood,VCU vs Colorado St.: Spread,2026-11-24,VCU,Colorado St.
+Robinhood,Clemson vs Washington: Spread,2026-11-24,Clemson,Washington
+Robinhood,Providence vs Arizona: Spread,2026-11-24,Providence,Arizona
 Robinhood,Ole Miss vs BYU: Spread,2026-11-24,Ole Miss,BYU
-Robinhood,UC San Diego vs San Jose St.: Spread,2026-11-24,UC San Diego,San Jose St.
-Robinhood,Colorado St. vs Arizona: Spread,2026-11-23,Colorado St.,Arizona
+Robinhood,VCU vs Colorado St.: Point Total,2026-11-24,VCU,Colorado St.
 Robinhood,Clemson vs Washington: Point Total,2026-11-24,Clemson,Washington
+Robinhood,Providence vs Arizona: Point Total,2026-11-24,Providence,Arizona
 Robinhood,Ole Miss vs BYU: Point Total,2026-11-24,Ole Miss,BYU
-Robinhood,UC San Diego vs San Jose St.: Point Total,2026-11-24,UC San Diego,San Jose St.
-Robinhood,Colorado St. vs Arizona: Point Total,2026-11-23,Colorado St.,Arizona
-Polymarket US,Colorado State vs. Arizona,2026-11-23,Colorado State,Arizona
 Polymarket US,Vermont State-Randolph vs. Stonehill,2026-11-24,Vermont State-Randolph,Stonehill
 Polymarket US,Penn State-Berks vs. Navy,2026-11-24,Penn State-Berks,Navy
 Polymarket US,Bloomsburg vs. Wagner,2026-11-24,Bloomsburg,Wagner
@@ -82,10 +83,17 @@ Polymarket US,Emerson vs. Quinnipiac,2026-11-24,Emerson,Quinnipiac
 Polymarket US,Arlington Baptist vs. East Texas A&M,2026-11-24,Arlington Baptist,East Texas A&M
 Polymarket US,SUNY-Fredonia vs. Mercyhurst,2026-11-24,SUNY-Fredonia,Mercyhurst
 Polymarket US,Arkansas Baptist vs. Little Rock,2026-11-24,Arkansas Baptist,Little Rock
-Polymarket US,UC San Diego vs. San Jose State,2026-11-24,UC San Diego,San Jose State
 Polymarket US,BYU vs. Ole Miss,2026-11-24,BYU,Ole Miss
 Polymarket US,Washington vs. Clemson,2026-11-24,Washington,Clemson
+Polymarket US,Arizona vs. Providence,2026-11-24,Arizona,Providence
+Polymarket US,Colorado State vs. VCU,2026-11-24,Colorado State,VCU
 DraftKings Sportsbook,Ole Miss at BYU,2026-11-24,Ole Miss,BYU
+BetMGM,Ole Miss at BYU,2026-11-24,Ole Miss,BYU
 FanDuel Sportsbook,Ole Miss at BYU,2026-11-24,Ole Miss,BYU
-FanDuel Sportsbook,Clemson at Washington,2026-11-24,Clemson,Washington
+DraftKings Sportsbook,Providence at Arizona,2026-11-24,Providence,Arizona
+BetMGM,Providence at Arizona,2026-11-24,Providence,Arizona
 DraftKings Sportsbook,Clemson at Washington,2026-11-24,Clemson,Washington
+BetMGM,Clemson at Washington,2026-11-24,Clemson,Washington
+FanDuel Sportsbook,Clemson at Washington,2026-11-24,Clemson,Washington
+DraftKings Sportsbook,VCU at Colorado State,2026-11-24,VCU,Colorado State
+BetMGM,VCU at Colorado State,2026-11-24,VCU,Colorado State
