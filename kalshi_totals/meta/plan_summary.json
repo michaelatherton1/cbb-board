@@ -1,0 +1,172 @@
+{
+ "by_season": [
+  {
+   "events": 4878,
+   "first_date": "2025-11-03T00:00:00.000",
+   "historical": 48580,
+   "last_date": "2026-04-06T00:00:00.000",
+   "markets": 48580,
+   "season": 2026,
+   "volume": 731561736.0,
+   "with_result": 48544
+  },
+  {
+   "events": 1059,
+   "first_date": "2026-11-01T00:00:00.000",
+   "historical": 0,
+   "last_date": "2026-11-25T00:00:00.000",
+   "markets": 19030,
+   "season": 2027,
+   "volume": 212249771.34,
+   "with_result": 17661
+  }
+ ],
+ "cutoff": {
+  "market_positions_last_updated_ts": "2026-09-25T00:00:00Z",
+  "market_settled_ts": "2026-09-25T00:00:00Z",
+  "orders_updated_ts": "2026-11-10T00:00:00Z",
+  "trades_created_ts": "2026-09-25T00:00:00Z"
+ },
+ "markets": {
+  "events_endpoint": 5937,
+  "events_endpoint_complete": true,
+  "events_kept": 5937,
+  "events_only_seen_via_markets": 0,
+  "historical_complete": true,
+  "historical_markets": 48580,
+  "live_complete": true,
+  "live_markets": 19030,
+  "markets_kept": 67610,
+  "overlap_live_and_historical": 0
+ },
+ "result": {
+  "": 1318,
+  "no": 33274,
+  "scalar": 87,
+  "yes": 32931
+ },
+ "run": {
+  "config": {
+   "base": "https://api.elections.kalshi.com/trade-api/v2",
+   "batch_fill": 0.9,
+   "batch_max_candles": 10000,
+   "budget_min": 290.0,
+   "data_out": "data_out",
+   "h1_max_days": 30.0,
+   "hist_h1_pts": 10.0,
+   "hist_m1_pts": -1.0,
+   "live_h1_pts": Infinity,
+   "live_m1_pts": 10.0,
+   "m1_after_start_min": 15.0,
+   "m1_before_tip_min": 240.0,
+   "max_file_mb": 85.0,
+   "max_markets": 0,
+   "mode": "plan",
+   "n_shards": 4,
+   "phases": "trades,candles_1h,candles_1m",
+   "plan": "plan_out",
+   "rps": 8.0,
+   "series": "KXNCAAMBTOTAL",
+   "shard": 0,
+   "tip_offset_h": 3.0,
+   "work": "work_tmp",
+   "workers": 8
+  },
+  "elapsed_min": 0.6,
+  "errors": {
+   "by_kind": {},
+   "count": 0,
+   "first": []
+  },
+  "field_units": {
+   "market.last_price": [
+    "last_price_dollars"
+   ],
+   "market.no_ask": [
+    "no_ask_dollars"
+   ],
+   "market.no_bid": [
+    "no_bid_dollars"
+   ],
+   "market.notional_value": [
+    "notional_value_dollars"
+   ],
+   "market.open_interest": [
+    "open_interest_fp"
+   ],
+   "market.previous_price": [
+    "previous_price_dollars"
+   ],
+   "market.previous_yes_ask": [
+    "previous_yes_ask_dollars"
+   ],
+   "market.previous_yes_bid": [
+    "previous_yes_bid_dollars"
+   ],
+   "market.settlement_value": [
+    "settlement_value_dollars"
+   ],
+   "market.volume": [
+    "volume_fp"
+   ],
+   "market.volume_24h": [
+    "volume_24h_fp"
+   ],
+   "market.yes_ask": [
+    "yes_ask_dollars"
+   ],
+   "market.yes_bid": [
+    "yes_bid_dollars"
+   ]
+  },
+  "requests": 104,
+  "retries": 2,
+  "retry_reasons": {
+   "429": 2
+  },
+  "started_utc": "2026-11-24T15:27:32Z"
+ },
+ "series_fee": {
+  "fee_multiplier": 1,
+  "fee_type": "quadratic_with_maker_fees"
+ },
+ "series_fee_changes": [
+  {
+   "fee_multiplier": 1,
+   "fee_type": "quadratic_with_maker_fees",
+   "id": "07776a87-258f-4177-8a3b-d600b9ac1cfb",
+   "scheduled_ts": "2025-11-15T08:00:00Z",
+   "series_ticker": "KXNCAAMBTOTAL"
+  }
+ ],
+ "shards": {
+  "0": {
+   "candles_1h": 7679,
+   "candles_1m": 267,
+   "est_minutes_at_6rps": 72.2,
+   "trades": 18051
+  },
+  "1": {
+   "candles_1h": 8079,
+   "candles_1m": 260,
+   "est_minutes_at_6rps": 75.6,
+   "trades": 18882
+  },
+  "2": {
+   "candles_1h": 7565,
+   "candles_1m": 255,
+   "est_minutes_at_6rps": 70.8,
+   "trades": 17675
+  },
+  "3": {
+   "candles_1h": 7628,
+   "candles_1m": 277,
+   "est_minutes_at_6rps": 72.6,
+   "trades": 18234
+  }
+ },
+ "status": {
+  "active": 1318,
+  "finalized": 66292
+ }
+}

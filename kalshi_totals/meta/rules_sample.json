@@ -1,0 +1,103 @@
+{
+ "distinct_early_close_condition": {
+  "This market will close and expire early if the event occurs.": 5937
+ },
+ "distinct_rules_secondary": {
+  "": 78,
+  "If the game is postponed but begins within 48 hours of its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is cancelled or not started within 48 hours of its originally scheduled start, all markets will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.": 1059,
+  "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.": 4800
+ },
+ "note": "rules of the middle rung for 10 events spread over the date range; plus every distinct rules_secondary / early_close_condition with its count of events",
+ "sample": [
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2025-11-03",
+   "event_ticker": "KXNCAAMBTOTAL-25NOV03QUINSJU",
+   "middle_ticker": "KXNCAAMBTOTAL-25NOV03QUINSJU-156",
+   "rules_primary": "If Quinnipiac and St. John's collectively score over 156.5 total points in the Quinnipiac at St. John's college basketball game originally scheduled for Nov 3, 2025, then the market resolves to Yes.",
+   "rules_secondary": "",
+   "title": "Quinnipiac at St. John's: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2025-11-27",
+   "event_ticker": "KXNCAAMBTOTAL-25NOV27ARKDUKE",
+   "middle_ticker": "KXNCAAMBTOTAL-25NOV27ARKDUKE-157",
+   "rules_primary": "If Arkansas and Duke collectively score over 157.5 total points in the Arkansas at Duke men's college basketball game originally scheduled for Nov 27, 2025, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Arkansas at Duke: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2025-12-29",
+   "event_ticker": "KXNCAAMBTOTAL-25DEC29KENTPUR",
+   "middle_ticker": "KXNCAAMBTOTAL-25DEC29KENTPUR-158",
+   "rules_primary": "If Kent St. and Purdue collectively score over 158.5 total points in the Kent St. at Purdue men's college basketball game originally scheduled for Dec 29, 2025, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Kent St. at Purdue: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-01-13",
+   "event_ticker": "KXNCAAMBTOTAL-26JAN13MASSWMU",
+   "middle_ticker": "KXNCAAMBTOTAL-26JAN13MASSWMU-159",
+   "rules_primary": "If UMass and Western Michigan collectively score over 159.5 total points in the UMass at Western Michigan men's college basketball game originally scheduled for Jan 13, 2026, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "UMass at Western Michigan: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-01-27",
+   "event_ticker": "KXNCAAMBTOTAL-26JAN27GCNEV",
+   "middle_ticker": "KXNCAAMBTOTAL-26JAN27GCNEV-142",
+   "rules_primary": "If Grand Canyon and Nevada collectively score over 142.5 total points in the Grand Canyon at Nevada men's college basketball game originally scheduled for Jan 27, 2026, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Grand Canyon at Nevada: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-02-10",
+   "event_ticker": "KXNCAAMBTOTAL-26FEB10UVAFSU",
+   "middle_ticker": "KXNCAAMBTOTAL-26FEB10UVAFSU-153",
+   "rules_primary": "If Virginia and Florida St. collectively score over 153.5 total points in the Virginia at Florida St. men's college basketball game originally scheduled for Feb 10, 2026, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Virginia at Florida St.: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-02-24",
+   "event_ticker": "KXNCAAMBTOTAL-26FEB24ULLTROY",
+   "middle_ticker": "KXNCAAMBTOTAL-26FEB24ULLTROY-133",
+   "rules_primary": "If Louisiana and Troy collectively score over 133.5 total points in the Louisiana at Troy men's college basketball game originally scheduled for Feb 24, 2026, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Louisiana at Troy: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-03-10",
+   "event_ticker": "KXNCAAMBTOTAL-26MAR10MHULIU",
+   "middle_ticker": "KXNCAAMBTOTAL-26MAR10MHULIU-135",
+   "rules_primary": "If Mercyhurst and LIU collectively score over 135.5 total points in the Mercyhurst at LIU men's college basketball game originally scheduled for Mar 10, 2026, then the market resolves to Yes.",
+   "rules_secondary": "Kalshi is not affiliated,  associated,  authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Mercyhurst at LIU: Total Points"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-11-10",
+   "event_ticker": "KXNCAAMBTOTAL-26NOV10CHSOWAKE",
+   "middle_ticker": "KXNCAAMBTOTAL-26NOV10CHSOWAKE-152",
+   "rules_primary": "If over 151.5 total points are scored in the Charleston Southern vs Wake Forest men's college basketball game originally scheduled for Nov 10, 2026, then the market resolves to Yes.",
+   "rules_secondary": "If the game is postponed but begins within 48 hours of its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is cancelled or not started within 48 hours of its originally scheduled start, all markets will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "Charleston Southern vs Wake Forest: Point Total"
+  },
+  {
+   "early_close_condition": "This market will close and expire early if the event occurs.",
+   "event_date": "2026-11-25",
+   "event_ticker": "KXNCAAMBTOTAL-26NOV25SBONBEL",
+   "middle_ticker": "KXNCAAMBTOTAL-26NOV25SBONBEL-150",
+   "rules_primary": "If over 149.5 total points are scored in the St. Bonaventure vs Belmont men's college basketball game originally scheduled for Nov 25, 2026, then the market resolves to Yes.",
+   "rules_secondary": "If the game is postponed but begins within 48 hours of its originally scheduled start time, the market will remain open and resolve based on the official final result. If the game is cancelled or not started within 48 hours of its originally scheduled start, all markets will resolve to a fair price.\n\nKalshi is not affiliated, associated, authorized, endorsed by, or in any way officially connected with the NCAA. All trademarks, logos, and brand names are the property of their respective owners.",
+   "title": "St. Bonaventure vs Belmont: Point Total"
+  }
+ ]
+}
