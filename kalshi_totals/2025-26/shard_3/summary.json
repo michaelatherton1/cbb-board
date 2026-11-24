@@ -1,0 +1,1311 @@
+{
+ "complete": {
+  "h1_status": true,
+  "m1_status": true,
+  "trades_status": true
+ },
+ "counts_by_event_date": [
+  {
+   "candles_1h": 792,
+   "candles_1m": 0,
+   "event_date": "2025-11-03",
+   "events": 19,
+   "markets": 209,
+   "trades": 1485
+  },
+  {
+   "candles_1h": 51,
+   "candles_1m": 0,
+   "event_date": "2025-11-04",
+   "events": 2,
+   "markets": 22,
+   "trades": 34
+  },
+  {
+   "candles_1h": 177,
+   "candles_1m": 0,
+   "event_date": "2025-11-05",
+   "events": 2,
+   "markets": 22,
+   "trades": 97
+  },
+  {
+   "candles_1h": 312,
+   "candles_1m": 0,
+   "event_date": "2025-11-06",
+   "events": 3,
+   "markets": 33,
+   "trades": 401
+  },
+  {
+   "candles_1h": 985,
+   "candles_1m": 0,
+   "event_date": "2025-11-07",
+   "events": 10,
+   "markets": 110,
+   "trades": 958
+  },
+  {
+   "candles_1h": 936,
+   "candles_1m": 0,
+   "event_date": "2025-11-08",
+   "events": 8,
+   "markets": 88,
+   "trades": 625
+  },
+  {
+   "candles_1h": 244,
+   "candles_1m": 0,
+   "event_date": "2025-11-09",
+   "events": 2,
+   "markets": 22,
+   "trades": 94
+  },
+  {
+   "candles_1h": 667,
+   "candles_1m": 0,
+   "event_date": "2025-11-10",
+   "events": 5,
+   "markets": 55,
+   "trades": 252
+  },
+  {
+   "candles_1h": 1116,
+   "candles_1m": 0,
+   "event_date": "2025-11-11",
+   "events": 10,
+   "markets": 110,
+   "trades": 466
+  },
+  {
+   "candles_1h": 1026,
+   "candles_1m": 0,
+   "event_date": "2025-11-12",
+   "events": 11,
+   "markets": 121,
+   "trades": 849
+  },
+  {
+   "candles_1h": 131,
+   "candles_1m": 0,
+   "event_date": "2025-11-13",
+   "events": 1,
+   "markets": 11,
+   "trades": 752
+  },
+  {
+   "candles_1h": 705,
+   "candles_1m": 0,
+   "event_date": "2025-11-14",
+   "events": 5,
+   "markets": 55,
+   "trades": 411
+  },
+  {
+   "candles_1h": 955,
+   "candles_1m": 0,
+   "event_date": "2025-11-15",
+   "events": 9,
+   "markets": 99,
+   "trades": 560
+  },
+  {
+   "candles_1h": 228,
+   "candles_1m": 0,
+   "event_date": "2025-11-16",
+   "events": 2,
+   "markets": 22,
+   "trades": 338
+  },
+  {
+   "candles_1h": 482,
+   "candles_1m": 0,
+   "event_date": "2025-11-17",
+   "events": 4,
+   "markets": 44,
+   "trades": 287
+  },
+  {
+   "candles_1h": 1654,
+   "candles_1m": 0,
+   "event_date": "2025-11-18",
+   "events": 11,
+   "markets": 121,
+   "trades": 1395
+  },
+  {
+   "candles_1h": 219,
+   "candles_1m": 0,
+   "event_date": "2025-11-19",
+   "events": 3,
+   "markets": 33,
+   "trades": 850
+  },
+  {
+   "candles_1h": 873,
+   "candles_1m": 0,
+   "event_date": "2025-11-20",
+   "events": 6,
+   "markets": 66,
+   "trades": 612
+  },
+  {
+   "candles_1h": 1178,
+   "candles_1m": 0,
+   "event_date": "2025-11-21",
+   "events": 9,
+   "markets": 99,
+   "trades": 985
+  },
+  {
+   "candles_1h": 399,
+   "candles_1m": 0,
+   "event_date": "2025-11-22",
+   "events": 4,
+   "markets": 44,
+   "trades": 155
+  },
+  {
+   "candles_1h": 311,
+   "candles_1m": 0,
+   "event_date": "2025-11-23",
+   "events": 3,
+   "markets": 33,
+   "trades": 315
+  },
+  {
+   "candles_1h": 536,
+   "candles_1m": 0,
+   "event_date": "2025-11-24",
+   "events": 4,
+   "markets": 44,
+   "trades": 888
+  },
+  {
+   "candles_1h": 692,
+   "candles_1m": 0,
+   "event_date": "2025-11-25",
+   "events": 6,
+   "markets": 66,
+   "trades": 2067
+  },
+  {
+   "candles_1h": 715,
+   "candles_1m": 0,
+   "event_date": "2025-11-26",
+   "events": 9,
+   "markets": 99,
+   "trades": 2870
+  },
+  {
+   "candles_1h": 615,
+   "candles_1m": 0,
+   "event_date": "2025-11-27",
+   "events": 7,
+   "markets": 77,
+   "trades": 1761
+  },
+  {
+   "candles_1h": 286,
+   "candles_1m": 0,
+   "event_date": "2025-11-28",
+   "events": 3,
+   "markets": 33,
+   "trades": 250
+  },
+  {
+   "candles_1h": 112,
+   "candles_1m": 0,
+   "event_date": "2025-11-29",
+   "events": 1,
+   "markets": 11,
+   "trades": 166
+  },
+  {
+   "candles_1h": 164,
+   "candles_1m": 0,
+   "event_date": "2025-11-30",
+   "events": 2,
+   "markets": 22,
+   "trades": 142
+  },
+  {
+   "candles_1h": 437,
+   "candles_1m": 0,
+   "event_date": "2025-12-01",
+   "events": 3,
+   "markets": 33,
+   "trades": 777
+  },
+  {
+   "candles_1h": 1350,
+   "candles_1m": 0,
+   "event_date": "2025-12-02",
+   "events": 10,
+   "markets": 110,
+   "trades": 2276
+  },
+  {
+   "candles_1h": 749,
+   "candles_1m": 0,
+   "event_date": "2025-12-03",
+   "events": 5,
+   "markets": 55,
+   "trades": 852
+  },
+  {
+   "candles_1h": 521,
+   "candles_1m": 0,
+   "event_date": "2025-12-05",
+   "events": 3,
+   "markets": 33,
+   "trades": 890
+  },
+  {
+   "candles_1h": 2896,
+   "candles_1m": 0,
+   "event_date": "2025-12-06",
+   "events": 21,
+   "markets": 231,
+   "trades": 3635
+  },
+  {
+   "candles_1h": 576,
+   "candles_1m": 0,
+   "event_date": "2025-12-07",
+   "events": 4,
+   "markets": 44,
+   "trades": 983
+  },
+  {
+   "candles_1h": 163,
+   "candles_1m": 0,
+   "event_date": "2025-12-08",
+   "events": 1,
+   "markets": 11,
+   "trades": 269
+  },
+  {
+   "candles_1h": 1210,
+   "candles_1m": 0,
+   "event_date": "2025-12-09",
+   "events": 6,
+   "markets": 66,
+   "trades": 2995
+  },
+  {
+   "candles_1h": 1424,
+   "candles_1m": 0,
+   "event_date": "2025-12-10",
+   "events": 8,
+   "markets": 88,
+   "trades": 2099
+  },
+  {
+   "candles_1h": 182,
+   "candles_1m": 0,
+   "event_date": "2025-12-12",
+   "events": 1,
+   "markets": 11,
+   "trades": 490
+  },
+  {
+   "candles_1h": 3071,
+   "candles_1m": 0,
+   "event_date": "2025-12-13",
+   "events": 18,
+   "markets": 198,
+   "trades": 3816
+  },
+  {
+   "candles_1h": 247,
+   "candles_1m": 0,
+   "event_date": "2025-12-14",
+   "events": 2,
+   "markets": 22,
+   "trades": 335
+  },
+  {
+   "candles_1h": 1345,
+   "candles_1m": 0,
+   "event_date": "2025-12-16",
+   "events": 7,
+   "markets": 77,
+   "trades": 2992
+  },
+  {
+   "candles_1h": 1426,
+   "candles_1m": 0,
+   "event_date": "2025-12-17",
+   "events": 8,
+   "markets": 88,
+   "trades": 1360
+  },
+  {
+   "candles_1h": 658,
+   "candles_1m": 0,
+   "event_date": "2025-12-18",
+   "events": 8,
+   "markets": 48,
+   "trades": 459
+  },
+  {
+   "candles_1h": 1015,
+   "candles_1m": 0,
+   "event_date": "2025-12-19",
+   "events": 7,
+   "markets": 59,
+   "trades": 1601
+  },
+  {
+   "candles_1h": 2001,
+   "candles_1m": 0,
+   "event_date": "2025-12-20",
+   "events": 17,
+   "markets": 131,
+   "trades": 1481
+  },
+  {
+   "candles_1h": 1376,
+   "candles_1m": 0,
+   "event_date": "2025-12-21",
+   "events": 12,
+   "markets": 92,
+   "trades": 1653
+  },
+  {
+   "candles_1h": 949,
+   "candles_1m": 0,
+   "event_date": "2025-12-22",
+   "events": 7,
+   "markets": 69,
+   "trades": 1036
+  },
+  {
+   "candles_1h": 288,
+   "candles_1m": 0,
+   "event_date": "2025-12-23",
+   "events": 3,
+   "markets": 17,
+   "trades": 2294
+  },
+  {
+   "candles_1h": 1286,
+   "candles_1m": 0,
+   "event_date": "2025-12-28",
+   "events": 5,
+   "markets": 47,
+   "trades": 1245
+  },
+  {
+   "candles_1h": 1144,
+   "candles_1m": 0,
+   "event_date": "2025-12-29",
+   "events": 12,
+   "markets": 76,
+   "trades": 3870
+  },
+  {
+   "candles_1h": 713,
+   "candles_1m": 0,
+   "event_date": "2025-12-30",
+   "events": 6,
+   "markets": 42,
+   "trades": 4632
+  },
+  {
+   "candles_1h": 846,
+   "candles_1m": 0,
+   "event_date": "2025-12-31",
+   "events": 10,
+   "markets": 54,
+   "trades": 2115
+  },
+  {
+   "candles_1h": 306,
+   "candles_1m": 0,
+   "event_date": "2026-01-01",
+   "events": 5,
+   "markets": 15,
+   "trades": 1079
+  },
+  {
+   "candles_1h": 618,
+   "candles_1m": 0,
+   "event_date": "2026-01-02",
+   "events": 4,
+   "markets": 36,
+   "trades": 2044
+  },
+  {
+   "candles_1h": 2124,
+   "candles_1m": 0,
+   "event_date": "2026-01-03",
+   "events": 25,
+   "markets": 139,
+   "trades": 7757
+  },
+  {
+   "candles_1h": 666,
+   "candles_1m": 0,
+   "event_date": "2026-01-04",
+   "events": 6,
+   "markets": 42,
+   "trades": 1953
+  },
+  {
+   "candles_1h": 573,
+   "candles_1m": 0,
+   "event_date": "2026-01-05",
+   "events": 6,
+   "markets": 26,
+   "trades": 6812
+  },
+  {
+   "candles_1h": 922,
+   "candles_1m": 0,
+   "event_date": "2026-01-06",
+   "events": 6,
+   "markets": 50,
+   "trades": 5399
+  },
+  {
+   "candles_1h": 1935,
+   "candles_1m": 0,
+   "event_date": "2026-01-07",
+   "events": 14,
+   "markets": 122,
+   "trades": 4235
+  },
+  {
+   "candles_1h": 2093,
+   "candles_1m": 0,
+   "event_date": "2026-01-08",
+   "events": 21,
+   "markets": 103,
+   "trades": 18086
+  },
+  {
+   "candles_1h": 212,
+   "candles_1m": 0,
+   "event_date": "2026-01-09",
+   "events": 3,
+   "markets": 9,
+   "trades": 759
+  },
+  {
+   "candles_1h": 3085,
+   "candles_1m": 0,
+   "event_date": "2026-01-10",
+   "events": 36,
+   "markets": 196,
+   "trades": 11231
+  },
+  {
+   "candles_1h": 496,
+   "candles_1m": 0,
+   "event_date": "2026-01-11",
+   "events": 4,
+   "markets": 36,
+   "trades": 4810
+  },
+  {
+   "candles_1h": 425,
+   "candles_1m": 0,
+   "event_date": "2026-01-12",
+   "events": 5,
+   "markets": 15,
+   "trades": 2433
+  },
+  {
+   "candles_1h": 854,
+   "candles_1m": 0,
+   "event_date": "2026-01-13",
+   "events": 5,
+   "markets": 47,
+   "trades": 3612
+  },
+  {
+   "candles_1h": 2352,
+   "candles_1m": 0,
+   "event_date": "2026-01-14",
+   "events": 17,
+   "markets": 123,
+   "trades": 17009
+  },
+  {
+   "candles_1h": 1077,
+   "candles_1m": 0,
+   "event_date": "2026-01-15",
+   "events": 13,
+   "markets": 47,
+   "trades": 4731
+  },
+  {
+   "candles_1h": 3535,
+   "candles_1m": 0,
+   "event_date": "2026-01-17",
+   "events": 39,
+   "markets": 197,
+   "trades": 10651
+  },
+  {
+   "candles_1h": 194,
+   "candles_1m": 0,
+   "event_date": "2026-01-18",
+   "events": 2,
+   "markets": 14,
+   "trades": 2802
+  },
+  {
+   "candles_1h": 721,
+   "candles_1m": 0,
+   "event_date": "2026-01-19",
+   "events": 6,
+   "markets": 66,
+   "trades": 1117
+  },
+  {
+   "candles_1h": 931,
+   "candles_1m": 0,
+   "event_date": "2026-01-20",
+   "events": 6,
+   "markets": 72,
+   "trades": 5379
+  },
+  {
+   "candles_1h": 2173,
+   "candles_1m": 0,
+   "event_date": "2026-01-21",
+   "events": 14,
+   "markets": 164,
+   "trades": 9899
+  },
+  {
+   "candles_1h": 1146,
+   "candles_1m": 0,
+   "event_date": "2026-01-22",
+   "events": 8,
+   "markets": 89,
+   "trades": 5417
+  },
+  {
+   "candles_1h": 312,
+   "candles_1m": 0,
+   "event_date": "2026-01-23",
+   "events": 2,
+   "markets": 22,
+   "trades": 927
+  },
+  {
+   "candles_1h": 3440,
+   "candles_1m": 0,
+   "event_date": "2026-01-24",
+   "events": 27,
+   "markets": 304,
+   "trades": 16361
+  },
+  {
+   "candles_1h": 425,
+   "candles_1m": 0,
+   "event_date": "2026-01-25",
+   "events": 3,
+   "markets": 33,
+   "trades": 6646
+  },
+  {
+   "candles_1h": 1107,
+   "candles_1m": 0,
+   "event_date": "2026-01-26",
+   "events": 6,
+   "markets": 68,
+   "trades": 25319
+  },
+  {
+   "candles_1h": 1593,
+   "candles_1m": 0,
+   "event_date": "2026-01-27",
+   "events": 10,
+   "markets": 112,
+   "trades": 23873
+  },
+  {
+   "candles_1h": 1463,
+   "candles_1m": 0,
+   "event_date": "2026-01-28",
+   "events": 9,
+   "markets": 106,
+   "trades": 7579
+  },
+  {
+   "candles_1h": 1153,
+   "candles_1m": 0,
+   "event_date": "2026-01-29",
+   "events": 19,
+   "markets": 209,
+   "trades": 16703
+  },
+  {
+   "candles_1h": 829,
+   "candles_1m": 0,
+   "event_date": "2026-01-30",
+   "events": 6,
+   "markets": 67,
+   "trades": 4339
+  },
+  {
+   "candles_1h": 5084,
+   "candles_1m": 0,
+   "event_date": "2026-01-31",
+   "events": 38,
+   "markets": 423,
+   "trades": 25509
+  },
+  {
+   "candles_1h": 1269,
+   "candles_1m": 0,
+   "event_date": "2026-02-01",
+   "events": 8,
+   "markets": 89,
+   "trades": 12180
+  },
+  {
+   "candles_1h": 1108,
+   "candles_1m": 0,
+   "event_date": "2026-02-02",
+   "events": 6,
+   "markets": 67,
+   "trades": 10018
+  },
+  {
+   "candles_1h": 1365,
+   "candles_1m": 0,
+   "event_date": "2026-02-03",
+   "events": 8,
+   "markets": 91,
+   "trades": 5451
+  },
+  {
+   "candles_1h": 2133,
+   "candles_1m": 0,
+   "event_date": "2026-02-04",
+   "events": 13,
+   "markets": 146,
+   "trades": 6621
+  },
+  {
+   "candles_1h": 2405,
+   "candles_1m": 0,
+   "event_date": "2026-02-05",
+   "events": 15,
+   "markets": 165,
+   "trades": 7889
+  },
+  {
+   "candles_1h": 168,
+   "candles_1m": 0,
+   "event_date": "2026-02-06",
+   "events": 1,
+   "markets": 11,
+   "trades": 2947
+  },
+  {
+   "candles_1h": 6899,
+   "candles_1m": 0,
+   "event_date": "2026-02-07",
+   "events": 50,
+   "markets": 553,
+   "trades": 27215
+  },
+  {
+   "candles_1h": 974,
+   "candles_1m": 0,
+   "event_date": "2026-02-09",
+   "events": 7,
+   "markets": 77,
+   "trades": 6707
+  },
+  {
+   "candles_1h": 435,
+   "candles_1m": 0,
+   "event_date": "2026-02-10",
+   "events": 7,
+   "markets": 82,
+   "trades": 12239
+  },
+  {
+   "candles_1h": 451,
+   "candles_1m": 0,
+   "event_date": "2026-02-11",
+   "events": 12,
+   "markets": 136,
+   "trades": 9136
+  },
+  {
+   "candles_1h": 1504,
+   "candles_1m": 0,
+   "event_date": "2026-02-12",
+   "events": 15,
+   "markets": 165,
+   "trades": 11384
+  },
+  {
+   "candles_1h": 272,
+   "candles_1m": 0,
+   "event_date": "2026-02-13",
+   "events": 2,
+   "markets": 23,
+   "trades": 8165
+  },
+  {
+   "candles_1h": 3708,
+   "candles_1m": 0,
+   "event_date": "2026-02-14",
+   "events": 35,
+   "markets": 390,
+   "trades": 60073
+  },
+  {
+   "candles_1h": 1124,
+   "candles_1m": 0,
+   "event_date": "2026-02-15",
+   "events": 10,
+   "markets": 110,
+   "trades": 36643
+  },
+  {
+   "candles_1h": 757,
+   "candles_1m": 0,
+   "event_date": "2026-02-16",
+   "events": 6,
+   "markets": 66,
+   "trades": 19487
+  },
+  {
+   "candles_1h": 1214,
+   "candles_1m": 0,
+   "event_date": "2026-02-17",
+   "events": 8,
+   "markets": 95,
+   "trades": 29291
+  },
+  {
+   "candles_1h": 1570,
+   "candles_1m": 0,
+   "event_date": "2026-02-18",
+   "events": 12,
+   "markets": 134,
+   "trades": 17132
+  },
+  {
+   "candles_1h": 1426,
+   "candles_1m": 0,
+   "event_date": "2026-02-19",
+   "events": 10,
+   "markets": 110,
+   "trades": 13218
+  },
+  {
+   "candles_1h": 315,
+   "candles_1m": 0,
+   "event_date": "2026-02-20",
+   "events": 2,
+   "markets": 22,
+   "trades": 3308
+  },
+  {
+   "candles_1h": 3992,
+   "candles_1m": 0,
+   "event_date": "2026-02-21",
+   "events": 41,
+   "markets": 456,
+   "trades": 33000
+  },
+  {
+   "candles_1h": 679,
+   "candles_1m": 0,
+   "event_date": "2026-02-22",
+   "events": 7,
+   "markets": 77,
+   "trades": 11295
+  },
+  {
+   "candles_1h": 312,
+   "candles_1m": 0,
+   "event_date": "2026-02-23",
+   "events": 2,
+   "markets": 22,
+   "trades": 4802
+  },
+  {
+   "candles_1h": 524,
+   "candles_1m": 0,
+   "event_date": "2026-02-24",
+   "events": 4,
+   "markets": 45,
+   "trades": 4547
+  },
+  {
+   "candles_1h": 1510,
+   "candles_1m": 0,
+   "event_date": "2026-02-25",
+   "events": 11,
+   "markets": 123,
+   "trades": 9535
+  },
+  {
+   "candles_1h": 1487,
+   "candles_1m": 0,
+   "event_date": "2026-02-26",
+   "events": 12,
+   "markets": 132,
+   "trades": 6499
+  },
+  {
+   "candles_1h": 514,
+   "candles_1m": 0,
+   "event_date": "2026-02-27",
+   "events": 4,
+   "markets": 44,
+   "trades": 3784
+  },
+  {
+   "candles_1h": 3450,
+   "candles_1m": 0,
+   "event_date": "2026-02-28",
+   "events": 31,
+   "markets": 342,
+   "trades": 27660
+  },
+  {
+   "candles_1h": 596,
+   "candles_1m": 0,
+   "event_date": "2026-03-01",
+   "events": 5,
+   "markets": 56,
+   "trades": 16556
+  },
+  {
+   "candles_1h": 454,
+   "candles_1m": 0,
+   "event_date": "2026-03-02",
+   "events": 3,
+   "markets": 33,
+   "trades": 10285
+  },
+  {
+   "candles_1h": 2588,
+   "candles_1m": 0,
+   "event_date": "2026-03-03",
+   "events": 17,
+   "markets": 191,
+   "trades": 30573
+  },
+  {
+   "candles_1h": 1527,
+   "candles_1m": 0,
+   "event_date": "2026-03-04",
+   "events": 10,
+   "markets": 116,
+   "trades": 19926
+  },
+  {
+   "candles_1h": 2652,
+   "candles_1m": 0,
+   "event_date": "2026-03-05",
+   "events": 18,
+   "markets": 200,
+   "trades": 29976
+  },
+  {
+   "candles_1h": 1448,
+   "candles_1m": 0,
+   "event_date": "2026-03-06",
+   "events": 11,
+   "markets": 127,
+   "trades": 23639
+  },
+  {
+   "candles_1h": 2244,
+   "candles_1m": 0,
+   "event_date": "2026-03-07",
+   "events": 18,
+   "markets": 205,
+   "trades": 19749
+  },
+  {
+   "candles_1h": 680,
+   "candles_1m": 0,
+   "event_date": "2026-03-08",
+   "events": 5,
+   "markets": 58,
+   "trades": 16215
+  },
+  {
+   "candles_1h": 387,
+   "candles_1m": 0,
+   "event_date": "2026-03-09",
+   "events": 3,
+   "markets": 34,
+   "trades": 9459
+  },
+  {
+   "candles_1h": 1242,
+   "candles_1m": 0,
+   "event_date": "2026-03-10",
+   "events": 7,
+   "markets": 87,
+   "trades": 29686
+  },
+  {
+   "candles_1h": 606,
+   "candles_1m": 0,
+   "event_date": "2026-03-11",
+   "events": 4,
+   "markets": 46,
+   "trades": 11507
+  },
+  {
+   "candles_1h": 1554,
+   "candles_1m": 0,
+   "event_date": "2026-03-12",
+   "events": 11,
+   "markets": 128,
+   "trades": 27659
+  },
+  {
+   "candles_1h": 1148,
+   "candles_1m": 0,
+   "event_date": "2026-03-13",
+   "events": 9,
+   "markets": 101,
+   "trades": 32454
+  },
+  {
+   "candles_1h": 611,
+   "candles_1m": 0,
+   "event_date": "2026-03-14",
+   "events": 5,
+   "markets": 58,
+   "trades": 21155
+  },
+  {
+   "candles_1h": 297,
+   "candles_1m": 0,
+   "event_date": "2026-03-17",
+   "events": 2,
+   "markets": 23,
+   "trades": 9657
+  },
+  {
+   "candles_1h": 594,
+   "candles_1m": 0,
+   "event_date": "2026-03-18",
+   "events": 2,
+   "markets": 24,
+   "trades": 14364
+  },
+  {
+   "candles_1h": 2258,
+   "candles_1m": 0,
+   "event_date": "2026-03-19",
+   "events": 5,
+   "markets": 69,
+   "trades": 49745
+  },
+  {
+   "candles_1h": 2910,
+   "candles_1m": 0,
+   "event_date": "2026-03-20",
+   "events": 5,
+   "markets": 60,
+   "trades": 41192
+  },
+  {
+   "candles_1h": 472,
+   "candles_1m": 0,
+   "event_date": "2026-03-21",
+   "events": 2,
+   "markets": 24,
+   "trades": 11794
+  },
+  {
+   "candles_1h": 234,
+   "candles_1m": 0,
+   "event_date": "2026-03-22",
+   "events": 1,
+   "markets": 11,
+   "trades": 18548
+  },
+  {
+   "candles_1h": 203,
+   "candles_1m": 0,
+   "event_date": "2026-03-24",
+   "events": 1,
+   "markets": 12,
+   "trades": 5522
+  },
+  {
+   "candles_1h": 318,
+   "candles_1m": 0,
+   "event_date": "2026-03-25",
+   "events": 1,
+   "markets": 12,
+   "trades": 4889
+  },
+  {
+   "candles_1h": 1195,
+   "candles_1m": 0,
+   "event_date": "2026-03-26",
+   "events": 3,
+   "markets": 60,
+   "trades": 46410
+  },
+  {
+   "candles_1h": 751,
+   "candles_1m": 0,
+   "event_date": "2026-03-27",
+   "events": 1,
+   "markets": 13,
+   "trades": 16474
+  },
+  {
+   "candles_1h": 306,
+   "candles_1m": 0,
+   "event_date": "2026-03-28",
+   "events": 1,
+   "markets": 11,
+   "trades": 20461
+  },
+  {
+   "candles_1h": 1124,
+   "candles_1m": 0,
+   "event_date": "2026-04-02",
+   "events": 2,
+   "markets": 22,
+   "trades": 7073
+  },
+  {
+   "candles_1h": 901,
+   "candles_1m": 0,
+   "event_date": "2026-04-04",
+   "events": 1,
+   "markets": 11,
+   "trades": 25629
+  }
+ ],
+ "data_time_range": {
+  "candles_1h": [
+   "1762189200",
+   "1775350800"
+  ],
+  "candles_1m": null,
+  "trades": [
+   "2025-11-03 17:30:27.430167+00:00",
+   "2026-04-05 00:25:41.902632+00:00"
+  ]
+ },
+ "event_date_range": [
+  "2025-11-03",
+  "2026-04-04"
+ ],
+ "events": 1202,
+ "files": [
+  {
+   "bytes": 629451,
+   "name": "trades_2025-11.parquet",
+   "rows": 20065
+  },
+  {
+   "bytes": 1355754,
+   "name": "trades_2025-12.parquet",
+   "rows": 44155
+  },
+  {
+   "bytes": 7254599,
+   "name": "trades_2026-01.parquet",
+   "rows": 254471
+  },
+  {
+   "bytes": 11043504,
+   "name": "trades_2026-02.parquet",
+   "rows": 400226
+  },
+  {
+   "bytes": 14605318,
+   "name": "trades_2026-03.parquet",
+   "rows": 537895
+  },
+  {
+   "bytes": 968875,
+   "name": "trades_2026-04.parquet",
+   "rows": 32702
+  },
+  {
+   "bytes": 148578,
+   "name": "candles_1h_2025-11.parquet",
+   "rows": 16561
+  },
+  {
+   "bytes": 228170,
+   "name": "candles_1h_2025-12.parquet",
+   "rows": 25873
+  },
+  {
+   "bytes": 391785,
+   "name": "candles_1h_2026-01.parquet",
+   "rows": 41844
+  },
+  {
+   "bytes": 434565,
+   "name": "candles_1h_2026-02.parquet",
+   "rows": 41565
+  },
+  {
+   "bytes": 291620,
+   "name": "candles_1h_2026-03.parquet",
+   "rows": 27275
+  },
+  {
+   "bytes": 27243,
+   "name": "candles_1h_2026-04.parquet",
+   "rows": 2025
+  },
+  {
+   "bytes": 144606,
+   "name": "fetch_status.parquet",
+   "rows": 11990
+  }
+ ],
+ "markets": 11990,
+ "n_shards": 4,
+ "rows": {
+  "candles_1h": 155143,
+  "candles_1m": 0,
+  "trades": 1289514
+ },
+ "run": {
+  "config": {
+   "base": "https://api.elections.kalshi.com/trade-api/v2",
+   "batch_fill": 0.9,
+   "batch_max_candles": 10000,
+   "budget_min": 290.0,
+   "data_out": "data_out",
+   "h1_max_days": 30.0,
+   "hist_h1_pts": 10.0,
+   "hist_m1_pts": -1.0,
+   "live_h1_pts": Infinity,
+   "live_m1_pts": 10.0,
+   "m1_after_start_min": 15.0,
+   "m1_before_tip_min": 240.0,
+   "max_file_mb": 85.0,
+   "max_markets": 0,
+   "mode": "shard",
+   "n_shards": 4,
+   "phases": "trades,candles_1h,candles_1m",
+   "plan": "plan_out",
+   "rps": 8.0,
+   "series": "KXNCAAMBTOTAL",
+   "shard": 3,
+   "tip_offset_h": 3.0,
+   "work": "work_tmp",
+   "workers": 8
+  },
+  "elapsed_min": 172.36,
+  "errors": {
+   "by_kind": {},
+   "count": 0,
+   "first": []
+  },
+  "field_units": {
+   "candles.historical.open_interest": [
+    "open_interest"
+   ],
+   "candles.historical.prices": [
+    "open"
+   ],
+   "candles.historical.volume": [
+    "volume"
+   ],
+   "candles.live.open_interest": [
+    "open_interest_fp"
+   ],
+   "candles.live.prices": [
+    "open_dollars"
+   ],
+   "candles.live.volume": [
+    "volume_fp"
+   ],
+   "trades.historical.count": [
+    "count_fp"
+   ],
+   "trades.historical.price": [
+    "yes_price_dollars"
+   ],
+   "trades.live.count": [
+    "count_fp"
+   ],
+   "trades.live.price": [
+    "yes_price_dollars"
+   ]
+  },
+  "phases": {
+   "candles_1h": {
+    "batch_splits": 0,
+    "complete": true,
+    "done": 7622,
+    "historical_markets": 7572,
+    "items": 7622,
+    "live_batches": 50,
+    "markets": 12560,
+    "not_started": 0,
+    "rows": 261792
+   },
+   "candles_1m": {
+    "batch_splits": 0,
+    "complete": true,
+    "done": 129,
+    "historical_markets": 0,
+    "items": 129,
+    "live_batches": 129,
+    "markets": 1979,
+    "not_started": 0,
+    "rows": 373730,
+    "window": "[start_utc_venues - 3.0h - 240.0min, start_utc_venues + 15.0min] clamped to the market's life"
+   },
+   "trades": {
+    "complete": true,
+    "done": 16577,
+    "duplicates_dropped": 0,
+    "items": 16577,
+    "markets_zero_volume_skipped": 401,
+    "not_started": 0,
+    "rows": 1780846
+   }
+  },
+  "requests": 24712,
+  "retries": 39,
+  "retry_reasons": {
+   "429": 39
+  },
+  "started_utc": "2026-11-24T15:28:46Z",
+  "trades_extra": {
+   "has_taker_book_side": 1780846
+  }
+ },
+ "season": "2025-26",
+ "shard": 3,
+ "statuses": {
+  "h1_status": {
+   "ok": 7572,
+   "out_of_scope": 4418
+  },
+  "m1_status": {
+   "out_of_scope": 11990
+  },
+  "trades_status": {
+   "ok": 11950,
+   "skipped_zero_volume": 40
+  }
+ }
+}
