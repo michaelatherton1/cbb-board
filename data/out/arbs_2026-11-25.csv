@@ -1,3 +1,1 @@
-game_id,date,tipoff,away,home,market,leg1,leg1_venue,leg1_ask,leg1_fee,leg2,leg2_venue,leg2_ask,leg2_fee,total_cost,locked_profit,roi,middle,same_venue
-401928831,2026-11-25,2026-11-25 12:30:00-05:00,Yale,Wright State,ml,Wright State ML,Polymarket US,0.37,0.0221,Yale ML,Kalshi,0.58,0.0171,0.9892,0.0108,0.0109,,False
-401926835,2026-11-25,2026-11-25 13:00:00-05:00,Lindenwood,Stony Brook,spread,Stony Brook -32.5,Kalshi,0.01,0.0007,Lindenwood +33.5,Kalshi,0.98,0.0014,0.9921,0.0079,0.008,both win if Stony Brook wins by 33,True
+
