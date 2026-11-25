@@ -1,2 +1,2 @@
 game_id,date,tipoff,away,home,market,leg1,leg1_venue,leg1_ask,leg1_fee,leg2,leg2_venue,leg2_ask,leg2_fee,total_cost,locked_profit,roi,middle,same_venue
-401925014,2026-11-24,2026-11-24 18:30:00-05:00,Robert Morris,Lamar,ml,Lamar ML,Polymarket US,0.53,0.0237,Robert Morris ML,Kalshi,0.39,0.0167,0.9604,0.0396,0.0412,,False
+401906762,2026-11-24,2026-11-24 22:00:00-05:00,Baylor,Alabama,ml,Alabama ML,Polymarket US,0.23,0.0168,Baylor ML,Kalshi,0.71,0.0144,0.9712,0.0288,0.0297,,False
