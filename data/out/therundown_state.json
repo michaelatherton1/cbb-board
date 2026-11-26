@@ -16,21 +16,21 @@
    "quotes": 142
   },
   "2026-11-26": {
-   "fetched": "2026-11-25T23:02:39+00:00",
-   "cost": 198,
-   "quotes": 162
+   "fetched": "2026-11-26T15:13:01+00:00",
+   "cost": 414,
+   "quotes": 372
   }
  },
  "spent_utc": {
   "2026-11-23": 1414,
   "2026-11-24": 4826,
   "2026-11-25": 2529,
-  "2026-11-26": 160
+  "2026-11-26": 574
  },
  "usage": {
-  "X-Datapoints": "160",
-  "X-Datapoints-Remaining": "19840",
-  "X-Datapoints-Monthly-Remaining": "187208",
+  "X-Datapoints": "414",
+  "X-Datapoints-Remaining": "19426",
+  "X-Datapoints-Monthly-Remaining": "186794",
   "X-Datapoints-Reset": "2026-11-27T00:00:00Z",
   "X-Bookmakers": "betmgm,fanduel,draftkings",
   "X-Data-Delay-Seconds": "300",
