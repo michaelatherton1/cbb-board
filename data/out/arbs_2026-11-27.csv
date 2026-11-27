@@ -1,1 +1,2 @@
-
+game_id,date,tipoff,away,home,market,leg1,leg1_venue,leg1_ask,leg1_fee,leg2,leg2_venue,leg2_ask,leg2_fee,total_cost,locked_profit,roi,middle,same_venue
+401921224,2026-11-27,2026-11-27 14:00:00-05:00,Navy,Fairfield,ml,Fairfield ML,Kalshi,0.94,0.0039,Navy ML,Polymarket US,0.05,0.0052,0.9991,0.0009,0.0009,,False
