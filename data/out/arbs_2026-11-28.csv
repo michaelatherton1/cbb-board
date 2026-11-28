@@ -1,1 +1,2 @@
-
+game_id,date,tipoff,away,home,market,leg1,leg1_venue,leg1_ask,leg1_fee,leg2,leg2_venue,leg2_ask,leg2_fee,total_cost,locked_profit,roi,middle,same_venue
+401920849,2026-11-28,2026-11-28 12:00:00-05:00,Princeton,St. Thomas,ml,St. Thomas ML,Kalshi,0.43,0.0172,Princeton ML,Polymarket US,0.47,0.0274,0.9446,0.0554,0.0586,,False
